@@ -6,12 +6,8 @@
   <meta name="theme-color" content="#0f0f13">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <title>FitTracker · 我的训练</title>
-  <style>
-/* ============================================================
+  <style>/* ============================================================
    FitTracker — Styles (Dark Gym Theme)
    ============================================================ */
 
@@ -685,134 +681,55 @@ body {
   background: var(--bg3); color: var(--accent);
   border-color: var(--accent);
 }
-  </style>
+</style>
 </head>
 <body>
-
-  <!-- Workout Active Indicator -->
   <div class="workout-active-indicator">🏋️ 训练进行中</div>
-
-  <!-- Top Bar -->
   <div class="top-bar">
     <h1>💪 FitTracker</h1>
     <span class="week-badge" id="week-label">第 1 周 · Week A</span>
   </div>
-
-  <!-- Week Tabs -->
   <div class="tab-bar no-select">
     <button class="tab-btn active" data-week="A">Week A</button>
     <button class="tab-btn" data-week="B">Week B</button>
   </div>
-
-  <!-- ============ PAGE: Plans ============ -->
-  <div class="page active" id="page-plans">
-    <div id="plans-list"></div>
-  </div>
-
-  <!-- ============ PAGE: Workout Detail ============ -->
-  <div class="page" id="page-workout-detail">
-    <div class="workout-detail" id="detail-content"></div>
-  </div>
-
-  <!-- ============ PAGE: Active Workout ============ -->
-  <div class="page" id="page-workout">
-    <div id="workout-content"></div>
-  </div>
-
-  <!-- ============ PAGE: History ============ -->
-  <div class="page" id="page-history">
-    <div class="history-list" id="history-list"></div>
-  </div>
-
-  <!-- ============ PAGE: Nutrition ============ -->
-  <div class="page" id="page-nutrition">
-    <div class="nutrition-page" id="nutrition-content"></div>
-  </div>
-
-  <!-- ============ PAGE: Settings ============ -->
+  <div class="page active" id="page-plans"><div id="plans-list"></div></div>
+  <div class="page" id="page-workout-detail"><div class="workout-detail" id="detail-content"></div></div>
+  <div class="page" id="page-workout"><div id="workout-content"></div></div>
+  <div class="page" id="page-history"><div class="history-list" id="history-list"></div></div>
+  <div class="page" id="page-nutrition"><div class="nutrition-page" id="nutrition-content"></div></div>
   <div class="page" id="page-settings">
-    <div class="settings-section">
-      <h3>📅 训练日设置</h3>
-      <div class="setting-row">
-        <label>训练天数</label>
+    <div class="settings-section"><h3>📅 训练日设置</h3>
+      <div class="setting-row"><label>训练天数</label>
         <div class="days-toggle">
-          <button data-day="1">一</button>
-          <button data-day="2">二</button>
-          <button data-day="3">三</button>
-          <button data-day="4">四</button>
-          <button data-day="5">五</button>
-          <button data-day="6">六</button>
-          <button data-day="7">日</button>
+          <button data-day="1">一</button><button data-day="2">二</button><button data-day="3">三</button>
+          <button data-day="4">四</button><button data-day="5">五</button><button data-day="6">六</button><button data-day="7">日</button>
         </div>
       </div>
     </div>
-
-    <div class="settings-section">
-      <h3>⏰ 训练提醒</h3>
-      <div class="setting-row">
-        <label>提醒时间</label>
-        <input type="time" id="reminder-time" value="17:00">
-      </div>
-      <div class="setting-row">
-        <label>提前提醒</label>
-        <input type="number" id="reminder-before" value="15" min="5" max="120">
-        <span style="font-size:0.8rem;color:var(--text3);margin-left:4px;">分钟</span>
-      </div>
-      <div class="setting-row">
-        <label>通知权限</label>
-        <button id="request-notif" style="background:var(--accent3);border:none;color:#fff;padding:6px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer;">
-          开启通知
-        </button>
-      </div>
-      <button id="test-notif" class="test-notif-btn">📢 测试通知</button>
+    <div class="settings-section"><h3>⏰ 训练提醒</h3>
+      <div class="setting-row"><label>提醒时间</label><input type="time" id="reminder-time" value="17:00"></div>
+      <div class="setting-row"><label>提前提醒</label><input type="number" id="reminder-before" value="15" min="5" max="120"><span style="font-size:0.8rem;color:var(--text3);margin-left:4px;">分钟</span></div>
+      <div class="setting-row"><label>通知权限</label><button id="request-notif" style="background:var(--accent3);border:none;color:#fff;padding:6px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer;">开启通知</button></div>
+      <button id="test-notif" style="font-size:0.8rem;color:var(--accent3);background:none;border:none;cursor:pointer;">📢 测试通知</button>
     </div>
-
-    <div class="settings-section">
-      <h3>💾 数据管理</h3>
+    <div class="settings-section"><h3>💾 数据管理</h3>
       <div style="display:flex;gap:10px;">
-        <button onclick="exportData()" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:0.85rem;cursor:pointer;">
-          📤 导出数据
-        </button>
-        <button onclick="clearData()" style="flex:1;padding:10px;background:#2a1010;border:1px solid #4a2020;border-radius:var(--radius-sm);color:var(--danger);font-size:0.85rem;cursor:pointer;">
-          🗑️ 清除数据
-        </button>
+        <button onclick="exportData()" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:0.85rem;cursor:pointer;">📤 导出数据</button>
+        <button onclick="clearData()" style="flex:1;padding:10px;background:#2a1010;border:1px solid #4a2020;border-radius:var(--radius-sm);color:var(--danger);font-size:0.85rem;cursor:pointer;">🗑️ 清除数据</button>
       </div>
     </div>
-
-    <button id="save-settings" style="width:100%;padding:14px;background:var(--accent2);border:none;border-radius:var(--radius);color:#fff;font-weight:700;font-size:1rem;cursor:pointer;margin-top:8px;">
-      💾 保存设置
-    </button>
+    <button id="save-settings" style="width:100%;padding:14px;background:var(--accent2);border:none;border-radius:var(--radius);color:#fff;font-weight:700;font-size:1rem;cursor:pointer;margin-top:8px;">💾 保存设置</button>
   </div>
-
-  <!-- ============ MODALS ============ -->
-
-  <!-- Scoring Modal -->
   <div class="modal-overlay" id="scoring-modal"></div>
-
-  <!-- Video Modal -->
   <div class="video-modal" id="video-modal"></div>
-
-  <!-- ============ Bottom Nav ============ -->
   <nav class="bottom-nav no-select">
-    <button class="nav-item active" data-tab="plans">
-      <span class="nav-icon">📋</span>
-      <span>计划</span>
-    </button>
-    <button class="nav-item" data-tab="nutrition">
-      <span class="nav-icon">🥗</span>
-      <span>饮食</span>
-    </button>
-    <button class="nav-item" data-tab="history">
-      <span class="nav-icon">📊</span>
-      <span>记录</span>
-    </button>
-    <button class="nav-item" data-tab="settings">
-      <span class="nav-icon">⚙️</span>
-      <span>设置</span>
-    </button>
+    <button class="nav-item active" data-tab="plans"><span class="nav-icon">📋</span><span>计划</span></button>
+    <button class="nav-item" data-tab="nutrition"><span class="nav-icon">🥗</span><span>饮食</span></button>
+    <button class="nav-item" data-tab="history"><span class="nav-icon">📊</span><span>记录</span></button>
+    <button class="nav-item" data-tab="settings"><span class="nav-icon">⚙️</span><span>设置</span></button>
   </nav>
-
-  <script>
+<script>
 // ============================================================
 // FitTracker — 训练数据 (Week A & Week B)
 // ============================================================
@@ -1739,7 +1656,7 @@ function renderExerciseCard(ex, idx) {
         <span>休息 ${totalRest}s</span>
       </div>
       ${ex.tips ? `<div class="ex-tips">💡 ${ex.tips}</div>` : ''}
-      ${ex.video ? `<button class="ex-video-btn" onclick="playVideo(\''+ex.video+'\')">▶ 看视频教程</button>` : ''}
+      ${ex.video ? `<a class="ex-video-btn" href="https://www.youtube.com/watch?v=${ex.video}" target="_blank" rel="noopener noreferrer" onclick="if(navigator.standalone){playVideo('${ex.video}','${ex.videoTitle || ex.name}');return false}">▶ 看视频教程</a>` : ''}
       <div class="set-inputs" id="set-inputs-${idx}">
         ${Array.from({length: ex.sets}, (_, s) => `
           <div style="display:flex;align-items:center;gap:3px;">
@@ -1869,7 +1786,7 @@ function renderWorkout() {
         </div>
       </div>
       ${tips ? `<div class="ex-tips">💡 ${tips}</div>` : ''}
-      ${videoId ? `<button class="ex-video-btn mb-8" onclick="playVideo(\''+videoId+'\')">▶ '+videoTitle+'</button>` : ''}
+      ${videoId ? `<a class="ex-video-btn mb-8" href="https://www.youtube.com/watch?v=${videoId}" target="_blank" rel="noopener noreferrer" onclick="if(navigator.standalone){playVideo('${videoId}','${videoTitle}');return false}">▶ ${videoTitle}</a>` : ''}
     </div>
     
     <div class="part-section">
@@ -2152,10 +2069,16 @@ function finishWorkoutSession() {
 // VIDEO PLAYER
 // ============================================================
 
-function playVideo(videoId) {
-  const overlay = document.getElementById('scoring-modal');
-  overlay.classList.add('show');
-  overlay.innerHTML = '<div class="modal" style="max-width:500px;"><div style="text-align:right;"><button onclick="document.getElementById(\'scoring-modal\').classList.remove(\'show\')" style="background:none;border:none;color:var(--text);font-size:1.2rem;cursor:pointer;">×</button></div><div style="position:relative;width:100%;aspect-ratio:16/9;"><iframe src="https://www.youtube.com/embed/'+videoId+'?autoplay=1" style="width:100%;height:100%;border:none;border-radius:8px;" allow="autoplay;fullscreen" allowfullscreen></iframe></div></div>';
+function playVideo(videoId, title) {
+  // iOS PWA 不能用 window.open，改用动态创建链接
+  const url = `https://www.youtube.com/watch?v=${videoId}`;
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 function closeVideo() {
@@ -2389,7 +2312,7 @@ function scheduleReminder() {
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
-  return m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
+  return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 }
 
 function formatDate(dateStr) {
@@ -2397,7 +2320,7 @@ function formatDate(dateStr) {
   const month = d.getMonth() + 1;
   const day = d.getDate();
   const days = ['日', '一', '二', '三', '四', '五', '六'];
-  return month + '月' + day + '日 周' + days[d.getDay()];
+  return `${month}月${day}日 周${days[d.getDay()]}`;
 }
 
 function exportData() {
@@ -2405,7 +2328,7 @@ function exportData() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'fittracker-' + new Date().toISOString().split('T')[0] + '.json';
+  a.download = `fittracker-${new Date().toISOString().split('T')[0]}.json`;
   a.click();
   URL.revokeObjectURL(url);
   showToast('✅ 数据已导出');
@@ -2420,29 +2343,33 @@ function clearData() {
   renderCurrentPage();
 }
 
-// ============================================================
-// TOAST NOTIFICATION (must come after playVideo)
-// ============================================================
+function playVideo(videoId) {
+  // Show inline YouTube embed in modal
+  var overlay = document.getElementById('scoring-modal');
+  overlay.classList.add('show');
+  overlay.innerHTML = '<div class="modal" style="max-width:500px;"><div style="text-align:right;"><button onclick="document.getElementById(\'scoring-modal\').classList.remove(\'show\')" style="background:none;border:none;color:var(--text);font-size:1.2rem;cursor:pointer;">×</button></div><div style="position:relative;width:100%;aspect-ratio:16/9;"><iframe src="https://www.youtube.com/embed/'+videoId+'?autoplay=1" style="width:100%;height:100%;border:none;border-radius:8px;" allow="autoplay;fullscreen" allowfullscreen></iframe></div></div>';
+}
 
 function showToast(msg) {
   let el = document.getElementById('toast');
   if (!el) {
     el = document.createElement('div');
     el.id = 'toast';
-    el.style.cssText =
-      'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);' +
-      'background:var(--bg2);color:var(--text);padding:12px 20px;' +
-      'border-radius:20px;font-size:0.85rem;font-weight:600;' +
-      'box-shadow:0 4px 20px rgba(0,0,0,0.4);' +
-      'z-index:400;opacity:0;transition:opacity 0.3s;' +
-      'max-width:90%;text-align:center;' +
-      'border:1px solid var(--border);';
+    el.style.cssText = `
+      position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
+      background:var(--bg2);color:var(--text);padding:12px 20px;
+      border-radius:20px;font-size:0.85rem;font-weight:600;
+      box-shadow:0 4px 20px rgba(0,0,0,0.4);
+      z-index:400;opacity:0;transition:opacity 0.3s;
+      max-width:90%;text-align:center;
+      border:1px solid var(--border);
+    `;
     document.body.appendChild(el);
   }
   el.textContent = msg;
   el.style.opacity = '1';
   clearTimeout(el._hide);
-  el._hide = setTimeout(function() { el.style.opacity = '0'; }, 2500);
+  el._hide = setTimeout(() => { el.style.opacity = '0'; }, 2500);
 }
 
 // ============================================================
@@ -2493,6 +2420,7 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-  </script>
+
+</script>
 </body>
 </html>
