@@ -1,0 +1,3045 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f0f13">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>FitTracker · 我的训练</title>
+  <style>/* ============================================================
+   FitTracker — Styles (Dark Gym Theme)
+   ============================================================ */
+
+:root {
+  --bg: #0f0f13;
+  --bg2: #1a1a24;
+  --bg3: #24243a;
+  --accent: #ff6b35;
+  --accent2: #00c853;
+  --accent3: #448aff;
+  --text: #e8e8f0;
+  --text2: #9999b0;
+  --text3: #666680;
+  --border: #2a2a3e;
+  --danger: #ff3d3d;
+  --success: #00c853;
+  --warn: #ffc107;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 15px; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 80px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========== Top Bar ========== */
+.top-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.top-bar h1 {
+  font-size: 1.1rem; font-weight: 700;
+  flex: 1;
+}
+.top-bar .week-badge {
+  font-size: 0.7rem;
+  background: var(--accent);
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.tab-bar {
+  display: flex;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 53px; z-index: 99;
+}
+.tab-btn {
+  flex: 1; padding: 10px 4px;
+  background: none; border: none;
+  color: var(--text2); font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  border-bottom: 3px solid transparent;
+}
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab-btn:active { opacity: 0.7; }
+
+/* ========== Pages ========== */
+.page { display: none; padding: 16px; }
+.page.active { display: block; }
+
+/* ========== Day Card (Plan View) ========== */
+.day-card {
+  background: var(--bg2);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.day-card:active { transform: scale(0.98); }
+.day-card .day-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.day-card .day-name {
+  font-weight: 700; font-size: 1rem;
+  color: var(--accent);
+}
+.day-card .day-tag {
+  font-size: 0.7rem;
+  background: var(--bg3);
+  color: var(--text2);
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+.day-card .part-summary {
+  font-size: 0.85rem;
+  color: var(--text2);
+}
+.day-card.today {
+  border-color: var(--accent2);
+  box-shadow: 0 0 0 1px var(--accent2);
+}
+
+/* ========== Workout Detail ========== */
+.workout-detail {
+  padding: 0;
+}
+.workout-detail .back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: none;
+  color: var(--accent3); font-size: 0.9rem;
+  cursor: pointer; padding: 8px 0; margin-bottom: 8px;
+}
+.detail-header {
+  margin-bottom: 16px;
+}
+.detail-header h2 {
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+}
+.detail-header .meta {
+  color: var(--text2); font-size: 0.85rem;
+}
+
+/* Part Section */
+.part-section { margin-bottom: 20px; }
+.part-title {
+  font-size: 1rem; font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+/* Exercise Card */
+.exercise-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: 8px;
+}
+.exercise-card .ex-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+.exercise-card .ex-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  flex: 1;
+}
+.exercise-card .ex-alt {
+  font-size: 0.7rem;
+  color: var(--text3);
+  margin-top: 2px;
+}
+.exercise-card .ex-meta {
+  display: flex; gap: 12px;
+  font-size: 0.8rem; color: var(--text2);
+  margin-bottom: 6px;
+}
+.exercise-card .ex-meta span { background: var(--bg3); padding: 1px 8px; border-radius: 10px; }
+.exercise-card .ex-tips {
+  font-size: 0.78rem;
+  color: var(--text3);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.exercise-card .ex-video-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.78rem;
+  color: var(--accent3);
+  background: none; border: 1px solid var(--accent3);
+  padding: 4px 12px; border-radius: 20px;
+  cursor: pointer; transition: 0.2s;
+  text-decoration: none;
+}
+.exercise-card .ex-video-btn:hover { background: rgba(68,138,255,0.1); }
+.exercise-card .ex-video-btn:active { opacity: 0.7; }
+
+.exercise-card .set-inputs {
+  display: flex; gap: 6px; align-items: center;
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.set-inputs input {
+  width: 60px; padding: 4px 8px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text); font-size: 0.85rem;
+  text-align: center;
+}
+.set-inputs input:focus { outline: none; border-color: var(--accent); }
+.set-inputs input::placeholder { color: var(--text3); }
+.set-inputs .set-label { font-size: 0.75rem; color: var(--text3); min-width: 20px; }
+.set-inputs .set-done {
+  background: none; border: 2px solid var(--text3);
+  width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text3); font-size: 0.8rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.set-inputs .set-done.done {
+  background: var(--accent2); border-color: var(--accent2);
+  color: #fff;
+}
+.set-inputs .set-done:active { transform: scale(0.9); }
+
+/* ========== Start Workout Button ========== */
+.start-workout-btn {
+  display: block; width: 100%;
+  padding: 16px;
+  background: var(--accent);
+  color: #fff; border: none;
+  border-radius: var(--radius);
+  font-size: 1.1rem; font-weight: 700;
+  cursor: pointer; transition: 0.2s;
+  margin-bottom: 20px;
+}
+.start-workout-btn:active { transform: scale(0.97); opacity: 0.9; }
+.start-workout-btn.completing { background: var(--accent2); }
+
+/* ========== Timer ========== */
+.timer-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.timer-section .timer-display {
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+.timer-section .timer-display.rest-mode { color: var(--accent3); }
+.timer-section .timer-label {
+  font-size: 0.8rem; color: var(--text2); margin-top: -4px;
+}
+.timer-section .timer-controls {
+  display: flex; gap: 8px; justify-content: center; margin-top: 10px;
+}
+.timer-controls button {
+  padding: 6px 16px;
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text); border-radius: 20px;
+  cursor: pointer; font-size: 0.8rem;
+}
+.timer-controls button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.timer-controls button:active { transform: scale(0.95); }
+
+/* ========== Scoring Modal ========== */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200; display: none;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  max-width: 380px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+}
+.modal h2 { font-size: 1.2rem; margin-bottom: 16px; text-align: center; }
+.modal .stat-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+.modal .stat-row label { font-size: 0.9rem; color: var(--text2); }
+.modal .stat-row .value { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+
+/* Star rating */
+.star-rating {
+  display: flex; gap: 4px; flex-direction: row-reverse;
+  justify-content: center;
+}
+.star-rating input { display: none; }
+.star-rating label {
+  font-size: 2rem; cursor: pointer; color: var(--text3);
+  transition: 0.15s;
+}
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label { color: #ffc107; }
+
+/* Slider */
+.rating-slider {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  margin-bottom: 16px;
+}
+.rating-slider input[type="range"] {
+  width: 100%; -webkit-appearance: none;
+  height: 4px; border-radius: 2px;
+  background: var(--bg3);
+  outline: none;
+}
+.rating-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+.rating-slider .slider-label {
+  display: flex; justify-content: space-between; width: 100%;
+  font-size: 0.75rem; color: var(--text3);
+}
+.rating-slider .slider-value { font-size: 0.9rem; font-weight: 700; color: var(--accent); }
+
+.rating-textarea {
+  width: 100%; padding: 10px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-family: var(--font); font-size: 0.85rem;
+  resize: vertical; min-height: 60px;
+  margin-bottom: 16px;
+}
+.rating-textarea:focus { outline: none; border-color: var(--accent); }
+
+.modal .btn-group {
+  display: flex; gap: 10px;
+}
+.modal .btn-group button {
+  flex: 1; padding: 12px; border: none; border-radius: var(--radius-sm);
+  font-size: 0.9rem; font-weight: 600; cursor: pointer;
+}
+.modal .btn-group .btn-cancel { background: var(--bg3); color: var(--text2); }
+.modal .btn-group .btn-save { background: var(--accent2); color: #fff; }
+.modal .btn-group button:active { opacity: 0.8; }
+
+/* ========== History ========== */
+.history-list { padding: 0; }
+.history-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px; margin-bottom: 8px;
+  cursor: pointer;
+}
+.history-item .hi-header {
+  display: flex; justify-content: space-between; margin-bottom: 4px;
+}
+.history-item .hi-date { font-size: 0.8rem; color: var(--text2); }
+.history-item .hi-week { font-size: 0.7rem; background: var(--bg3); padding: 1px 8px; border-radius: 10px; }
+.history-item .hi-name { font-weight: 600; font-size: 0.95rem; }
+.history-item .hi-score {
+  text-align: right;
+}
+.history-item .hi-score .num {
+  font-size: 1.2rem; font-weight: 700; color: var(--accent);
+}
+.history-item .hi-score .label { font-size: 0.7rem; color: var(--text3); }
+.history-item .hi-detail {
+  font-size: 0.78rem; color: var(--text2);
+  margin-top: 4px;
+  display: none;
+}
+.history-item.expanded .hi-detail { display: block; }
+.history-item .hi-detail table { width: 100%; }
+.history-item .hi-detail td { padding: 2px 4px; font-size: 0.78rem; }
+.history-item .hi-detail td:last-child { text-align: right; color: var(--text3); }
+
+.empty-state {
+  text-align: center; padding: 40px 20px;
+  color: var(--text3);
+}
+.empty-state p { font-size: 0.9rem; margin-top: 8px; }
+
+/* ========== Settings ========== */
+.settings-section {
+  margin-bottom: 24px;
+}
+.settings-section h3 {
+  font-size: 0.95rem; margin-bottom: 12px;
+  color: var(--text);
+}
+.setting-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.setting-row label { font-size: 0.85rem; color: var(--text2); }
+.setting-row input[type="time"] {
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 6px 10px;
+  border-radius: var(--radius-sm); font-size: 0.85rem;
+}
+.setting-row input[type="number"] {
+  width: 60px;
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); padding: 6px 10px;
+  border-radius: var(--radius-sm); font-size: 0.85rem;
+  text-align: center;
+}
+.days-toggle {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.days-toggle button {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 2px solid var(--border); background: var(--bg);
+  color: var(--text2); font-size: 0.75rem; font-weight: 600;
+  cursor: pointer; transition: 0.2s;
+}
+.days-toggle button.on {
+  background: var(--accent); border-color: var(--accent); color: #fff;
+}
+.days-toggle button:active { transform: scale(0.9); }
+
+/* ========== Video Modal ========== */
+.video-modal {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,0.9);
+  display: none; align-items: center; justify-content: center;
+  padding: 12px;
+}
+.video-modal.show { display: flex; }
+.video-modal .video-wrapper {
+  width: 100%; max-width: 500px;
+  position: relative;
+}
+.video-modal .video-wrapper iframe {
+  width: 100%; aspect-ratio: 16/9;
+  border: none; border-radius: var(--radius-sm);
+}
+.video-modal .close-video {
+  position: absolute; top: -36px; right: 0;
+  background: none; border: none;
+  color: #fff; font-size: 1.3rem; cursor: pointer;
+}
+
+/* ========== Bottom Nav ========== */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  display: flex; z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.nav-item {
+  flex: 1; padding: 8px 4px 6px;
+  background: none; border: none;
+  color: var(--text3); font-size: 0.65rem;
+  cursor: pointer; transition: 0.2s;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.nav-item .nav-icon { font-size: 1.4rem; line-height: 1; }
+.nav-item.active { color: var(--accent); }
+.nav-item:active { opacity: 0.7; }
+
+/* ========== Workout Active ========== */
+.exercise-card.active-ex {
+  border-color: var(--accent);
+  border-left: 3px solid var(--accent);
+}
+
+/* ========== Misc ========== */
+.progress-bar {
+  height: 4px; background: var(--bg3); border-radius: 2px;
+  margin: 8px 0; overflow: hidden;
+}
+.progress-bar .fill {
+  height: 100%; background: var(--accent2);
+  border-radius: 2px; transition: width 0.3s;
+}
+.text-accent { color: var(--accent); }
+.text-success { color: var(--accent2); }
+.text-muted { color: var(--text2); }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+
+.no-select { -webkit-user-select: none; user-select: none; }
+
+/* Exercise count badge */
+.ex-count-badge {
+  display: inline-block;
+  background: var(--bg3);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  color: var(--text2);
+}
+
+/* Workout Mode indicator */
+.workout-active-indicator {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  background: var(--accent2);
+  padding: 4px; text-align: center;
+  font-size: 0.75rem; font-weight: 600; color: #fff;
+}
+.workout-active-indicator.show { display: block; }
+
+/* Notification test */
+.test-notif-btn {
+  font-size: 0.8rem; color: var(--accent3);
+  background: none; border: none; cursor: pointer;
+  padding: 4px 0;
+}
+.test-notif-btn:active { opacity: 0.7; }
+
+/* ========== Calendar ========== */
+.cal-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.cal-nav .month-title {
+  font-size: 1.05rem; font-weight: 700;
+}
+.cal-nav button {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text); padding: 6px 14px;
+  border-radius: var(--radius-sm); cursor: pointer;
+  font-size: 0.85rem;
+}
+.cal-nav button:active { opacity: 0.7; }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-bottom: 16px;
+}
+.cal-grid .cal-header {
+  text-align: center; font-size: 0.7rem; font-weight: 600;
+  color: var(--text3); padding: 4px 0;
+}
+.cal-grid .cal-day {
+  text-align: center; padding: 6px 2px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem; font-weight: 500;
+  min-height: 44px;
+  position: relative;
+  cursor: pointer;
+  background: var(--bg2);
+  display: flex; flex-direction: column; align-items: center;
+  gap: 2px;
+}
+.cal-grid .cal-day.other-month { opacity: 0.25; }
+.cal-grid .cal-day.training {
+  background: rgba(255,107,53,0.15);
+  border: 1px solid rgba(255,107,53,0.3);
+}
+.cal-grid .cal-day.completed {
+  background: rgba(0,200,83,0.15);
+  border: 1px solid rgba(0,200,83,0.3);
+}
+.cal-grid .cal-day.today {
+  box-shadow: 0 0 0 2px var(--accent2);
+}
+.cal-grid .cal-day .cal-date {
+  font-weight: 700; font-size: 0.85rem;
+}
+.cal-grid .cal-day .cal-label {
+  font-size: 0.55rem; color: var(--text3);
+  line-height: 1.1;
+  word-break: break-word;
+}
+.cal-grid .cal-day .cal-check {
+  font-size: 0.6rem;
+  color: var(--accent2);
+}
+.cal-grid .cal-day .cal-score {
+  font-size: 0.55rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.cal-day:active { transform: scale(0.95); }
+
+/* ========== Nutrition ========== */
+.nutrition-page { padding: 0; }
+.nutrition-page h2 { font-size: 1.1rem; margin-bottom: 12px; }
+
+.nutri-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.nutri-card h3 {
+  font-size: 0.95rem; margin-bottom: 8px;
+}
+.nutri-card .macro-line {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 4px 0; font-size: 0.85rem;
+}
+.nutri-card .macro-bar {
+  height: 6px; border-radius: 3px; margin: 4px 0 10px;
+  background: var(--bg3); overflow: hidden;
+  display: flex;
+}
+.nutri-card .macro-bar .fill-protein { background: var(--accent); }
+.nutri-card .macro-bar .fill-carbs { background: var(--accent3); }
+.nutri-card .macro-bar .fill-fat { background: var(--warn); }
+
+.food-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.82rem;
+}
+.food-item:last-child { border-bottom: none; }
+.food-item .food-name { font-weight: 600; }
+.food-item .food-sr { color: var(--text3); font-size: 0.72rem; }
+.food-item .food-where { color: var(--accent3); font-size: 0.72rem; }
+
+/* Post-workout nutrition summary in modal */
+.post-nutri {
+  background: rgba(0,200,83,0.08);
+  border: 1px solid rgba(0,200,83,0.2);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-top: 12px;
+}
+.post-nutri .pn-title {
+  font-size: 0.85rem; font-weight: 700; margin-bottom: 8px;
+  color: var(--accent2);
+}
+.post-nutri .pn-macros {
+  display: flex; gap: 8px; justify-content: center;
+}
+.post-nutri .pn-macro {
+  text-align: center; padding: 6px 12px;
+  background: var(--bg); border-radius: var(--radius-sm);
+  flex: 1;
+}
+.post-nutri .pn-macro .val {
+  font-size: 1.1rem; font-weight: 700;
+}
+.post-nutri .pn-macro .lab {
+  font-size: 0.65rem; color: var(--text3);
+}
+.post-nutri .pn-macro.protein .val { color: var(--accent); }
+.post-nutri .pn-macro.carbs .val { color: var(--accent3); }
+.post-nutri .pn-macro.fat .val { color: var(--warn); }
+
+.post-nutri .pn-meals {
+  margin-top: 10px;
+}
+.post-nutri .pn-meal {
+  font-size: 0.78rem; padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.post-nutri .pn-meal:last-child { border-bottom: none; }
+.post-nutri .pn-meal strong { color: var(--text); }
+
+.nutri-tabs {
+  display: flex; gap: 4px; margin-bottom: 12px;
+}
+.nutri-tabs button {
+  flex: 1; padding: 8px 4px;
+  background: var(--bg2); border: 1px solid var(--border);
+  color: var(--text2); border-radius: var(--radius-sm);
+  font-size: 0.78rem; font-weight: 600; cursor: pointer;
+}
+.nutri-tabs button.active {
+  background: var(--bg3); color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ========== Meal Logger ========== */
+.meal-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.meal-quick-btn {
+  padding: 8px 4px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.15s;
+  text-align: center;
+  line-height: 1.2;
+}
+.meal-quick-btn:active { transform: scale(0.95); opacity: 0.8; }
+.meal-quick-btn .kcal { display: block; font-size: 0.6rem; color: var(--text3); font-weight: 400; }
+.meal-quick-btn.protein { border-color: var(--accent); }
+.meal-quick-btn.carbs { border-color: var(--accent3); }
+.meal-quick-btn.veggie { border-color: var(--accent2); }
+.meal-quick-btn.fat { border-color: var(--warn); }
+
+.meal-custom-input {
+  display: flex; gap: 8px; align-items: center;
+  margin-bottom: 12px;
+}
+.meal-custom-input select,
+.meal-custom-input input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 0.8rem;
+  padding: 8px 10px;
+}
+.meal-custom-input select { flex: 3; }
+.meal-custom-input input { width: 70px; text-align: center; }
+.meal-custom-input button {
+  padding: 8px 14px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.meal-custom-input button:active { opacity: 0.8; }
+
+.meal-progress-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 6px;
+}
+.meal-progress-row .mp-label { width: 48px; font-size: 0.75rem; font-weight: 600; flex-shrink: 0; }
+.meal-progress-row .mp-bar {
+  flex: 1; height: 8px;
+  background: var(--bg3); border-radius: 4px; overflow: hidden;
+}
+.meal-progress-row .mp-bar .mp-fill {
+  height: 100%; border-radius: 4px; transition: width 0.3s;
+}
+.meal-progress-row .mp-num {
+  width: 60px; text-align: right;
+  font-size: 0.75rem; color: var(--text2); font-weight: 600;
+}
+
+.meal-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 10px;
+  background: var(--bg3);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  font-size: 0.82rem;
+}
+.meal-item .mi-info { flex: 1; }
+.meal-item .mi-name { font-weight: 600; }
+.meal-item .mi-grams { color: var(--text3); font-size: 0.72rem; }
+.meal-item .mi-nutri { text-align: right; font-size: 0.72rem; color: var(--text2); }
+.meal-item .mi-actions {
+  display: flex; gap: 4px; margin-left: 8px;
+}
+.meal-item .mi-actions button {
+  background: none; border: none;
+  color: var(--text3); font-size: 0.9rem;
+  cursor: pointer; padding: 2px 4px;
+}
+.meal-item .mi-actions button:hover { color: var(--danger); }
+
+.analyze-btn {
+  display: block; width: 100%;
+  padding: 14px;
+  background: var(--accent2);
+  color: #fff; border: none;
+  border-radius: var(--radius);
+  font-size: 1rem; font-weight: 700;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: 0.2s;
+}
+.analyze-btn:active { transform: scale(0.97); opacity: 0.9; }
+
+.food-guide-group {
+  margin-bottom: 12px;
+}
+.food-guide-group .fg-title {
+  font-size: 0.85rem; font-weight: 700; margin-bottom: 8px;
+  padding-bottom: 4px; border-bottom: 1px solid var(--border);
+}
+.food-guide-item {
+  display: flex; justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.8rem;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.food-guide-item:last-child { border-bottom: none; }
+.food-guide-item .fg-nutri {
+  font-size: 0.7rem; color: var(--text3);
+}
+
+.analysis-recs {
+  padding: 0;
+}
+.analysis-recs .rec-item {
+  padding: 8px 10px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+  border-left: 3px solid var(--accent);
+}
+.analysis-recs .rec-item.good { border-left-color: var(--accent2); }
+.analysis-recs .rec-item.warn { border-left-color: var(--warn); }
+.analysis-recs .rec-item .rec-label {
+  font-weight: 600; font-size: 0.82rem;
+}
+.analysis-recs .rec-item .rec-text {
+  color: var(--text2); font-size: 0.78rem;
+  margin-top: 2px;
+}
+
+.meal-group-label {
+  font-size: 0.78rem;
+  color: var(--text3);
+  padding: 4px 0;
+  font-weight: 600;
+  margin-top: 4px;
+}
+</style>
+</head>
+<body>
+  <div class="workout-active-indicator">🏋️ 训练进行中</div>
+  <div class="top-bar">
+    <h1>💪 FitTracker</h1>
+    <span class="week-badge" id="week-label">第 1 周 · Week A</span>
+  </div>
+  <div class="tab-bar no-select">
+    <button class="tab-btn active" data-week="A">Week A</button>
+    <button class="tab-btn" data-week="B">Week B</button>
+  </div>
+  <div class="page active" id="page-plans"><div id="plans-list"></div></div>
+  <div class="page" id="page-workout-detail"><div class="workout-detail" id="detail-content"></div></div>
+  <div class="page" id="page-workout"><div id="workout-content"></div></div>
+  <div class="page" id="page-history"><div class="history-list" id="history-list"></div></div>
+  <div class="page" id="page-nutrition"><div class="nutrition-page" id="nutrition-content"></div></div>
+  <div class="page" id="page-settings">
+    <div class="settings-section"><h3>📅 训练日设置</h3>
+      <div class="setting-row"><label>训练天数</label>
+        <div class="days-toggle">
+          <button data-day="1">一</button><button data-day="2">二</button><button data-day="3">三</button>
+          <button data-day="4">四</button><button data-day="5">五</button><button data-day="6">六</button><button data-day="7">日</button>
+        </div>
+      </div>
+    </div>
+    <div class="settings-section"><h3>⏰ 训练提醒</h3>
+      <div class="setting-row"><label>提醒时间</label><input type="time" id="reminder-time" value="17:00"></div>
+      <div class="setting-row"><label>提前提醒</label><input type="number" id="reminder-before" value="15" min="5" max="120"><span style="font-size:0.8rem;color:var(--text3);margin-left:4px;">分钟</span></div>
+      <div class="setting-row"><label>通知权限</label><button id="request-notif" style="background:var(--accent3);border:none;color:#fff;padding:6px 14px;border-radius:20px;font-size:0.8rem;cursor:pointer;">开启通知</button></div>
+      <button id="test-notif" style="font-size:0.8rem;color:var(--accent3);background:none;border:none;cursor:pointer;">📢 测试通知</button>
+    </div>
+    <div class="settings-section"><h3>💾 数据管理</h3>
+      <div style="display:flex;gap:10px;">
+        <button onclick="exportData()" style="flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:0.85rem;cursor:pointer;">📤 导出数据</button>
+        <button onclick="clearData()" style="flex:1;padding:10px;background:#2a1010;border:1px solid #4a2020;border-radius:var(--radius-sm);color:var(--danger);font-size:0.85rem;cursor:pointer;">🗑️ 清除数据</button>
+      </div>
+    </div>
+    <button id="save-settings" style="width:100%;padding:14px;background:var(--accent2);border:none;border-radius:var(--radius);color:#fff;font-weight:700;font-size:1rem;cursor:pointer;margin-top:8px;">💾 保存设置</button>
+  </div>
+  <div class="modal-overlay" id="scoring-modal"></div>
+  <div class="video-modal" id="video-modal"></div>
+  <nav class="bottom-nav no-select">
+    <button class="nav-item active" data-tab="plans"><span class="nav-icon">📋</span><span>计划</span></button>
+    <button class="nav-item" data-tab="nutrition"><span class="nav-icon">🥗</span><span>饮食</span></button>
+    <button class="nav-item" data-tab="history"><span class="nav-icon">📊</span><span>记录</span></button>
+    <button class="nav-item" data-tab="settings"><span class="nav-icon">⚙️</span><span>设置</span></button>
+  </nav>
+<script>
+// ============================================================
+// FitTracker — 训练数据 (Week A & Week B)
+// ============================================================
+
+const TRAINING_DATA = {
+  weeks: {
+    A: {
+      label: 'Week A',
+      days: [
+        // Day 1: 胸 + 三头
+        {
+          id: 'chest-triceps-a',
+          name: '胸 + 三头',
+          parts: [
+            {
+              name: '🏆 胸部',
+              exercises: [
+                {
+                  name: '杠铃平板卧推',
+                  sets: 4, reps: '6-10', rest: 90,
+                  video: 'vcBig73ojpE',
+                  tips: '肩胛骨收紧贴凳→杠铃下放至胸部下方→手肘45°夹角',
+                  videoTitle: 'Jeff Nippard: 完美卧推'
+                },
+                {
+                  name: '上斜哑铃卧推',
+                  sets: 4, reps: '8-12', rest: 75,
+                  video: '8iPpKZfiwl0',
+                  tips: '凳子上斜30-45°，上胸发力',
+                  videoTitle: 'Athlean-X: 上斜卧推'
+                },
+                {
+                  name: '绳索夹胸',
+                  sets: 3, reps: '12-15', rest: 45,
+                  video: 'gc6H7Y4SBLk',
+                  tips: '身体微前倾，肘弯锁死，离心控制',
+                  videoTitle: 'Jeff Nippard: 胸训练'
+                },
+                {
+                  name: '双杠臂屈伸',
+                  sets: 3, reps: '8-12', rest: 60,
+                  video: '2z8g1dM31Tg',
+                  tips: '身体前倾练胸，直立练三头',
+                  videoTitle: 'Athlean-X: Dips全讲解'
+                }
+              ]
+            },
+            {
+              name: '🔧 肱三头肌',
+              exercises: [
+                {
+                  name: '绳索下压',
+                  sets: 3, reps: '12-15', rest: 45,
+                  video: 'kiuVA0gsVt0',
+                  tips: '大臂贴紧不动，下压到底外旋手腕',
+                  videoTitle: 'RP Triceps Pushdown'
+                },
+                {
+                  name: '仰卧杠铃臂屈伸 (Skull Crusher)',
+                  sets: 3, reps: '10-12', rest: 45,
+                  video: '7VqF7JYxFDs',
+                  tips: '大臂保持垂直，下放至额头后方',
+                  videoTitle: 'Jeremy Ethier: 三头教学'
+                }
+              ]
+            }
+          ]
+        },
+        // Day 2: 背 + 二头
+        {
+          id: 'back-biceps-a',
+          name: '背 + 二头',
+          parts: [
+            {
+              name: '🏆 背部',
+              exercises: [
+                {
+                  name: '引体向上',
+                  sets: 4, reps: '力竭', rest: 90,
+                  video: 'eGo4IYlbE5g',
+                  tips: '肩胛下沉→胸部拉向杠→离心控制2s',
+                  videoTitle: 'Athlean-X: 引体向上',
+                  altName: '高位下拉 (Lat Pulldown) 4×8-12'
+                },
+                {
+                  name: '杠铃划船',
+                  sets: 4, reps: '6-10', rest: 90,
+                  video: '9efGC4ObzC0',
+                  tips: '俯身45°，杠铃拉至下腹，背部收缩1s',
+                  videoTitle: 'Jeff Nippard: 完美划船'
+                },
+                {
+                  name: '坐姿绳索划船',
+                  sets: 3, reps: '10-12', rest: 60,
+                  video: '3PAhRnjmMcA',
+                  tips: '坐直不后仰，肩胛后缩',
+                  videoTitle: 'Jeremy Ethier: 背训练'
+                },
+                {
+                  name: '面拉 (Face Pull)',
+                  sets: 3, reps: '15-20', rest: 45,
+                  video: 'GVNpBliX_So',
+                  tips: '绳索拉至面部，双手外分，练后束+肩袖',
+                  videoTitle: 'Jeff Nippard: Face Pull'
+                }
+              ]
+            },
+            {
+              name: '🔧 肱二头肌',
+              exercises: [
+                {
+                  name: '杠铃弯举',
+                  sets: 3, reps: '8-12', rest: 60,
+                  video: 'OEBE5D3EujM',
+                  tips: '大臂贴紧，离心下放3秒',
+                  videoTitle: 'RP: 二头弯举'
+                },
+                {
+                  name: '哑铃锤式弯举',
+                  sets: 3, reps: '10-15', rest: 45,
+                  video: 'AvBQgneUyR8',
+                  tips: '掌心相对，增加手臂厚度',
+                  videoTitle: 'Athlean-X: 二头动作'
+                }
+              ]
+            }
+          ]
+        },
+        // Day 3: 肩 + 三头
+        {
+          id: 'shoulders-triceps-a',
+          name: '肩 + 三头',
+          parts: [
+            {
+              name: '🏆 肩部',
+              exercises: [
+                {
+                  name: '哑铃推举',
+                  sets: 4, reps: '8-12', rest: 75,
+                  video: '2Mot3eYRD4I',
+                  tips: '坐姿靠背，哑铃在耳侧，推至头顶',
+                  videoTitle: 'Jeff Nippard: 肩训练'
+                },
+                {
+                  name: '哑铃侧平举',
+                  sets: 4, reps: '12-15', rest: 45,
+                  video: 'geB_ut0CTNc',
+                  tips: '轻重量，像倒水一样提起，不要耸肩！',
+                  videoTitle: 'Athlean-X: 侧平举'
+                },
+                {
+                  name: '俯身飞鸟',
+                  sets: 3, reps: '12-15', rest: 45,
+                  video: '-z6cOXhp_ro',
+                  tips: '上身接近平行地面，挤压后束',
+                  videoTitle: 'Jeremy Ethier: 后束'
+                },
+                {
+                  name: '阿诺德推举 (可选轮换)',
+                  sets: 3, reps: '8-12', rest: 60,
+                  video: 'Z4SeqHbmV-Y',
+                  tips: '从胸前向外旋推起过头',
+                  videoTitle: 'RP: Arnold Press'
+                }
+              ]
+            },
+            {
+              name: '🔧 肱三头肌',
+              exercises: [
+                {
+                  name: '绳索下压',
+                  sets: 3, reps: '12-15', rest: 45,
+                  video: 'kiuVA0gsVt0',
+                  tips: '肩推后三头已预疲劳，不用太重',
+                  videoTitle: 'RP Triceps Pushdown'
+                },
+                {
+                  name: '窄距卧推',
+                  sets: 3, reps: '10-12', rest: 45,
+                  video: 'LBq4YamWDVs',
+                  tips: '握距略窄于肩，手肘贴紧身体',
+                  videoTitle: 'Jeff Nippard: 窄距卧推'
+                }
+              ]
+            }
+          ]
+        },
+        // Day 4: 腿 + 腹
+        {
+          id: 'legs-abs-a',
+          name: '腿 + 腹',
+          parts: [
+            {
+              name: '🏆 腿部',
+              exercises: [
+                {
+                  name: '杠铃深蹲',
+                  sets: 4, reps: '6-10', rest: 120,
+                  video: 'b_E09vxT_Qk',
+                  tips: '杠铃在斜方肌→挺胸→大腿平行或以下→膝对准脚尖',
+                  videoTitle: 'Jeff Nippard: 完美深蹲'
+                },
+                {
+                  name: '罗马尼亚硬拉 (RDL)',
+                  sets: 4, reps: '8-12', rest: 90,
+                  video: '_oyxCn2iSjU',
+                  tips: '膝微弯锁死，杠铃贴腿下降，臀部前推站直',
+                  videoTitle: 'Athlean-X: 硬拉教学'
+                },
+                {
+                  name: '腿举',
+                  sets: 3, reps: '10-15', rest: 60,
+                  video: '3BxqHY7GKy0',
+                  tips: '脚掌踏板中部，下放至大腿近胸，推起不锁膝',
+                  videoTitle: 'Jeremy Ethier: 腿训练'
+                },
+                {
+                  name: '保加利亚分腿蹲',
+                  sets: 3, reps: '8-12/腿', rest: 60,
+                  video: '2C-uNgKwCEO',
+                  tips: '后脚放凳，前脚向前，躯干直立',
+                  videoTitle: 'Jeff Nippard: 分腿蹲'
+                },
+                {
+                  name: '站姿提踵',
+                  sets: 4, reps: '15-20', rest: 30,
+                  video: '-M4-G8p8hFQ',
+                  tips: '脚尖在台阶上，下沉到底→提踵到最高',
+                  videoTitle: 'RP: 小腿训练'
+                }
+              ]
+            },
+            {
+              name: '🔧 腹部',
+              exercises: [
+                {
+                  name: '悬垂举腿',
+                  sets: 3, reps: '12-15', rest: 45,
+                  video: 'o1shu-GB2KQ',
+                  tips: '腹部收紧，抬腿至平行或以上',
+                  videoTitle: 'Athlean-X: 腹肌王者'
+                },
+                {
+                  name: '平板支撑',
+                  sets: 3, reps: '45-60s', rest: 30,
+                  video: 'QhHkCZcO8-A',
+                  tips: '身体一条直线，腹部全力收紧',
+                  videoTitle: 'Jeremy Ethier: 核心训练'
+                },
+                {
+                  name: '卷腹 (脚抬高)',
+                  sets: 3, reps: '15-20', rest: 30,
+                  tips: '腿抬高90°，卷起肩胛骨离地',
+                  video: ''
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    B: {
+      label: 'Week B',
+      days: [
+        // Day 1: 胸 + 三头
+        {
+          id: 'chest-triceps-b',
+          name: '胸 + 三头',
+          parts: [
+            {
+              name: '🏆 胸部',
+              exercises: [
+                {
+                  name: '上斜杠铃卧推',
+                  sets: 4, reps: '6-10', rest: 90,
+                  video: 'JMAO64q8O6A',
+                  tips: 'Week A平板→Week B上斜交替，刺激上胸',
+                  videoTitle: 'Jeff Nippard: 上斜卧推'
+                },
+                {
+                  name: '哑铃平板卧推',
+                  sets: 4, reps: '8-12', rest: 75,
+                  video: 'SQhY6WLDvmk',
+                  tips: '哑铃更自由活动范围，平衡左右力量差',
+                  videoTitle: 'Athlean-X: 哑铃卧推'
+                },
+                {
+                  name: '蝴蝶机夹胸',
+                  sets: 3, reps: '12-15', rest: 45,
+                  video: '-z6cOXhp_ro',
+                  tips: '固定轨迹更稳定，专注胸肌收缩',
+                  videoTitle: 'Jeremy Ethier: 胸训练'
+                },
+                {
+                  name: '双杠臂屈伸 (保留)',
+                  sets: 3, reps: '8-12', rest: 60,
+                  video: '2z8g1dM31Tg',
+                  tips: '经典复合动作，胸和三头一起练',
+                  videoTitle: 'Athlean-X: Dips'
+                }
+              ]
+            },
+            {
+              name: '🔧 肱三头肌',
+              exercises: [
+                {
+                  name: '反握绳索下压',
+                  sets: 3, reps: '12-15', rest: 45,
+                  video: 'kiuVA0gsVt0',
+                  tips: '反握更侧重三头内侧头',
+                  videoTitle: 'RP Triceps'
+                },
+                {
+                  name: '钻石俯卧撑',
+                  sets: 3, reps: '力竭', rest: 45,
+                  tips: '徒手收尾，不用器械，泵感强',
+                  video: ''
+                }
+              ]
+            }
+          ]
+        },
+        // Day 2: 背 + 二头
+        {
+          id: 'back-biceps-b',
+          name: '背 + 二头',
+          parts: [
+            {
+              name: '🏆 背部',
+              exercises: [
+                {
+                  name: '引体向上 (保持)',
+                  sets: 4, reps: '力竭', rest: 90,
+                  video: 'eGo4IYlbE5g',
+                  tips: '引体向上每周都做，进步靠频率',
+                  videoTitle: 'Athlean-X: 引体向上',
+                  altName: '高位下拉 4×8-12'
+                },
+                {
+                  name: 'T杠划船',
+                  sets: 4, reps: '6-10', rest: 90,
+                  video: 'prZ3QGlV5Rw',
+                  tips: 'T杠更稳定，背中部收缩感更强',
+                  videoTitle: 'Jeff Nippard: 背训练'
+                },
+                {
+                  name: '单臂哑铃划船',
+                  sets: 3, reps: '10-12', rest: 60,
+                  video: 'pYcpzIman7E',
+                  tips: '单手集中练每侧背阔肌',
+                  videoTitle: 'Athlean-X: 单臂划船'
+                },
+                {
+                  name: '反向飞鸟',
+                  sets: 3, reps: '15-20', rest: 45,
+                  video: '-z6cOXhp_ro',
+                  tips: '练后束，替代面拉的不同角度',
+                  videoTitle: 'Jeremy Ethier: 后束'
+                }
+              ]
+            },
+            {
+              name: '🔧 肱二头肌',
+              exercises: [
+                {
+                  name: '上斜哑铃弯举',
+                  sets: 3, reps: '8-12', rest: 60,
+                  video: 'OEBE5D3EujM',
+                  tips: '斜躺拉伸幅度更大，二头拉长状态下发力',
+                  videoTitle: 'RP: 二头弯举'
+                },
+                {
+                  name: '绳索弯举',
+                  sets: 3, reps: '12-15', rest: 45,
+                  video: 'FYJM36S3x8Y',
+                  tips: '绳索全程张力，二头全程用力',
+                  videoTitle: 'Jeff Nippard'
+                }
+              ]
+            }
+          ]
+        },
+        // Day 3: 肩 + 三头
+        {
+          id: 'shoulders-triceps-b',
+          name: '肩 + 三头',
+          parts: [
+            {
+              name: '🏆 肩部',
+              exercises: [
+                {
+                  name: '杠铃推举 (站姿)',
+                  sets: 4, reps: '6-10', rest: 90,
+                  video: '2yj25P_j4Bk',
+                  tips: '站姿需要核心稳定，整体力量更好',
+                  videoTitle: 'Athlean-X: 杠铃推举'
+                },
+                {
+                  name: '绳索侧平举',
+                  sets: 4, reps: '12-15', rest: 45,
+                  video: '4vZxHjq6m_w',
+                  tips: '绳索全程张力更大，轻重量高次数',
+                  videoTitle: 'Jeremy Ethier: 侧平举'
+                },
+                {
+                  name: '面拉 (放肩日)',
+                  sets: 3, reps: '15-20', rest: 45,
+                  video: 'GVNpBliX_So',
+                  tips: '面拉本质是肩后束动作，放肩日更合理',
+                  videoTitle: 'Jeff Nippard: Face Pull'
+                },
+                {
+                  name: '哑铃前平举',
+                  sets: 3, reps: '12-15', rest: 45,
+                  tips: '前束已由推举练到，轻微补充即可',
+                  video: ''
+                }
+              ]
+            },
+            {
+              name: '🔧 肱三头肌',
+              exercises: [
+                {
+                  name: '仰卧杠铃臂屈伸 (French Press)',
+                  sets: 3, reps: '10-12', rest: 45,
+                  video: '0wGBKJHVboE',
+                  tips: '大臂垂直，下放至额头后方',
+                  videoTitle: 'RP Skull Crusher'
+                },
+                {
+                  name: '三头绳索过顶伸展',
+                  sets: 3, reps: '12-15', rest: 45,
+                  video: 'kiuVA0gsVt0',
+                  tips: '刺激三头长头，手臂后方线条',
+                  videoTitle: 'RP Triceps'
+                }
+              ]
+            }
+          ]
+        },
+        // Day 4: 腿 + 腹
+        {
+          id: 'legs-abs-b',
+          name: '腿 + 腹',
+          parts: [
+            {
+              name: '🏆 腿部',
+              exercises: [
+                {
+                  name: '前蹲 / 高脚杯深蹲',
+                  sets: 4, reps: '8-12', rest: 90,
+                  video: 'lCu0DqLV6MA',
+                  tips: '前蹲核心要求更高，膝关节压力更小',
+                  videoTitle: 'Jeff Nippard: 前蹲'
+                },
+                {
+                  name: '哑铃罗马尼亚硬拉',
+                  sets: 4, reps: '10-12', rest: 75,
+                  video: 'Uy8k7TEb5NY',
+                  tips: '哑铃在手两侧，新手更容易找到腘绳肌发力感',
+                  videoTitle: 'Jeremy Ethier: 硬拉'
+                },
+                {
+                  name: '行走弓步',
+                  sets: 3, reps: '12-15/腿', rest: 60,
+                  video: 'Jz1xAJmBlmg',
+                  tips: '全身稳定+心肺挑战',
+                  videoTitle: 'Athlean-X: 弓步'
+                },
+                {
+                  name: '俯卧腿弯举',
+                  sets: 3, reps: '12-15', rest: 45,
+                  video: 'uRWea1hJzhA',
+                  tips: '孤立练腘绳肌',
+                  videoTitle: 'RP: 腿弯举'
+                },
+                {
+                  name: '坐姿提踵',
+                  sets: 4, reps: '15-20', rest: 30,
+                  video: '-M4-G8p8hFQ',
+                  tips: '侧重比目鱼肌，让小腿更饱满',
+                  videoTitle: 'RP: 小腿'
+                }
+              ]
+            },
+            {
+              name: '🔧 腹部',
+              exercises: [
+                {
+                  name: '仰卧举腿',
+                  sets: 3, reps: '15-20', rest: 45,
+                  video: 'o1shu-GB2KQ',
+                  tips: '下腹发力',
+                  videoTitle: 'Athlean-X: 腹肌'
+                },
+                {
+                  name: '俄罗斯转体',
+                  sets: 3, reps: '20/侧', rest: 30,
+                  video: 'o1shu-GB2KQ',
+                  tips: '旋转核心',
+                  videoTitle: 'Athlean-X: 腹肌'
+                },
+                {
+                  name: '平板支撑交替抬腿',
+                  sets: 3, reps: '30-45s', rest: 30,
+                  tips: '核心稳定+髋屈肌',
+                  video: ''
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  // Day name mapping
+  dayNames: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+  schedule: [1, 3, 5, 7] // Mon, Wed, Fri, Sun (隔天练，充分恢复)
+};
+
+// ============================================================
+// 营养指南数据
+// ============================================================
+
+// ============================================================
+// FOOD DATABASE (per 100g)
+// ============================================================
+
+const FOOD_DATABASE = {
+  /* ---- 中国主食 ---- */
+  '白米饭(熟)': { kcal: 116, protein: 2.6, carbs: 25.9, fat: 0.3, group: 'carbs' },
+  '面条(熟)': { kcal: 110, protein: 3.4, carbs: 22, fat: 0.3, group: 'carbs' },
+  '馒头': { kcal: 221, protein: 7, carbs: 45, fat: 1, group: 'carbs' },
+  '红薯': { kcal: 86, protein: 1.6, carbs: 20, fat: 0.1, group: 'carbs' },
+  '土豆': { kcal: 77, protein: 2, carbs: 17, fat: 0.1, group: 'carbs', sr: 'Krompir' },
+  '燕麦片': { kcal: 367, protein: 13.5, carbs: 66, fat: 6.7, group: 'carbs', sr: 'Ovsene pahuljice' },
+  
+  /* ---- 蛋白质 ---- */
+  '鸡胸肉': { kcal: 165, protein: 31, carbs: 0, fat: 3.6, group: 'protein', sr: 'Pileća prsa' },
+  '鸡腿肉(去骨)': { kcal: 180, protein: 26, carbs: 0, fat: 8, group: 'protein' },
+  '鸡蛋(熟)': { kcal: 155, protein: 13, carbs: 1.1, fat: 11, group: 'protein', sr: 'Jaja' },
+  '瘦牛肉': { kcal: 158, protein: 26, carbs: 0, fat: 5.8, group: 'protein', sr: 'Mlevena junetina' },
+  '猪里脊': { kcal: 150, protein: 25, carbs: 0, fat: 5, group: 'protein' },
+  '三文鱼': { kcal: 208, protein: 20, carbs: 0, fat: 13, group: 'protein', sr: 'Losos' },
+  '白身鱼': { kcal: 85, protein: 18, carbs: 0, fat: 1, group: 'protein', sr: 'Oslić / Smuđ' },
+  '虾仁': { kcal: 85, protein: 18, carbs: 0, fat: 0.5, group: 'protein' },
+  '豆腐': { kcal: 76, protein: 8, carbs: 2, fat: 4, group: 'protein' },
+  '蛋白粉(乳清)': { kcal: 400, protein: 80, carbs: 10, fat: 5, group: 'protein', sr: 'Proteinski prah' },
+  
+  /* ---- 蔬菜 ---- */
+  '西兰花': { kcal: 34, protein: 2.8, carbs: 7, fat: 0.4, group: 'veggie', sr: 'Brokoli' },
+  '菠菜': { kcal: 23, protein: 2.9, carbs: 3.6, fat: 0.4, group: 'veggie', sr: 'Spanać' },
+  '生菜': { kcal: 15, protein: 1.4, carbs: 2.9, fat: 0.2, group: 'veggie' },
+  '西红柿': { kcal: 18, protein: 0.9, carbs: 3.9, fat: 0.2, group: 'veggie' },
+  '黄瓜': { kcal: 15, protein: 0.7, carbs: 3.6, fat: 0.1, group: 'veggie' },
+  '胡萝卜': { kcal: 41, protein: 0.9, carbs: 10, fat: 0.2, group: 'veggie' },
+  '洋葱': { kcal: 40, protein: 1.1, carbs: 9, fat: 0.1, group: 'veggie' },
+  '蘑菇': { kcal: 22, protein: 3.1, carbs: 3.3, fat: 0.3, group: 'veggie' },
+  
+  /* ---- 碳水/水果 ---- */
+  '香蕉': { kcal: 89, protein: 1.1, carbs: 23, fat: 0.3, group: 'carbs', sr: 'Banana' },
+  '苹果': { kcal: 52, protein: 0.3, carbs: 14, fat: 0.2, group: 'carbs' },
+  '橙子': { kcal: 47, protein: 0.9, carbs: 12, fat: 0.1, group: 'carbs' },
+  '葡萄': { kcal: 69, protein: 0.7, carbs: 18, fat: 0.2, group: 'carbs' },
+  '全麦面包': { kcal: 247, protein: 13, carbs: 41, fat: 3.4, group: 'carbs', sr: 'Integralni hleb' },
+  '地瓜': { kcal: 86, protein: 1.6, carbs: 20, fat: 0.1, group: 'carbs', sr: 'Batat' },
+  
+  /* ---- 奶制品/脂肪 ---- */
+  '希腊酸奶': { kcal: 97, protein: 9, carbs: 4, fat: 5, group: 'protein', sr: 'Grčki jogurt' },
+  '牛奶': { kcal: 61, protein: 3.3, carbs: 4.8, fat: 3.3, group: 'protein' },
+  '白奶酪': { kcal: 200, protein: 16, carbs: 3, fat: 15, group: 'protein', sr: 'Beli sir' },
+  '橄榄油': { kcal: 884, protein: 0, carbs: 0, fat: 100, group: 'fat', sr: 'Maslinovo ulje' },
+  '花生酱': { kcal: 588, protein: 25, carbs: 20, fat: 50, group: 'fat', sr: 'Puter od kikirikija' },
+  '坚果混合': { kcal: 607, protein: 20, carbs: 20, fat: 53, group: 'fat', sr: 'Orašasti plodovi' },
+  '鸡蛋': { kcal: 155, protein: 13, carbs: 1.1, fat: 11, group: 'protein', sr: 'Jaja' }
+};
+
+const NUTRITION = {
+  // Eason: 167cm / 60kg / ~18%BF
+  postWorkout: {
+    timing: '训练后30分钟内',
+    target: { protein: 35, carbs: 65, fat: 8 }, // 克
+    rationale: '快速补糖原+促肌肉合成',
+    meals: [
+      {
+        name: '🥩 鸡胸肉+米饭（经典）',
+        ingredients: '鸡胸肉 150g + 白米饭 200g(熟) + 西兰花',
+        protein: 35, carbs: 55, fat: 5,
+        prep: '鸡胸煎/烤，撒盐黑胡椒，米饭配蔬菜'
+      },
+      {
+        name: '🥛 蛋白粉+香蕉（快速）',
+        ingredients: '乳清蛋白粉 1勺(30g) + 香蕉 2根 + 水',
+        protein: 27, carbs: 55, fat: 2,
+        prep: '直接摇匀，训练后最快方案'
+      },
+      {
+        name: '🥣 希腊酸奶+燕麦',
+        ingredients: 'Grčki jogurt 300g + 燕麦 50g + 蜂蜜',
+        protein: 28, carbs: 60, fat: 5,
+        prep: '燕麦可热水泡开再拌酸奶'
+      },
+      {
+        name: '🥩 瘦牛肉+土豆',
+        ingredients: 'Mlevena junetina 150g + 土豆 200g(熟)',
+        protein: 35, carbs: 40, fat: 8,
+        prep: '牛肉煎熟调味，土豆蒸或烤'
+      },
+      {
+        name: '🍚 鸡腿+地瓜',
+        ingredients: '去骨鸡腿肉 150g + 地瓜(batat) 200g',
+        protein: 30, carbs: 48, fat: 7,
+        prep: '鸡腿去皮煎熟，地瓜烤/蒸'
+      }
+    ]
+  },
+  dailyTargets: {
+    training: { kcal: 2300, protein: 120, carbs: 270, fat: 55 },
+    rest: { kcal: 1850, protein: 120, carbs: 180, fat: 55 }
+  },
+  serbianFoods: [
+    { name: '鸡胸肉', sr: 'Pileća prsa', where: 'Maxi / Idea / Lidl' },
+    { name: '瘦牛肉', sr: 'Mlevena junetina', where: '肉店 / Maxi' },
+    { name: '白奶酪', sr: 'Beli sir', where: '任何超市（高蛋白高性价比）' },
+    { name: '希腊酸奶', sr: 'Grčki jogurt', where: '任何超市' },
+    { name: '鸡蛋', sr: 'Jaja', where: '所有超市' },
+    { name: '燕麦', sr: 'Ovsene pahuljice', where: '超市早餐区' },
+    { name: '全麦面包', sr: 'Integralni hleb', where: '面包区' },
+    { name: '土豆', sr: 'Krompir', where: '所有超市' },
+    { name: '地瓜', sr: 'Batat', where: '大超市/Lidl' },
+    { name: '橄榄油', sr: 'Maslinovo ulje', where: 'Lidl便宜' },
+    { name: '坚果', sr: 'Orašasti plodovi', where: '坚果区' },
+    { name: '花生酱', sr: 'Puter od kikirikija', where: '大超市进口区' },
+    { name: '白身鱼', sr: 'Oslić / Smuđ', where: '鱼摊/Lidl冷冻' },
+    { name: '西兰花', sr: 'Brokoli', where: '超市冷冻/蔬菜区' },
+    { name: '菠菜', sr: 'Spanać', where: '所有超市' },
+    { name: '蛋白粉', sr: null, where: 'DM / 健身用品店' }
+  ]
+};
+
+// Helper: get today's scheduled workout
+function getTodayWorkout() {
+  const now = new Date();
+  const day = now.getDay() || 7; // Sun=0 → 7
+  const scheduleIndex = TRAINING_DATA.schedule.indexOf(day);
+  if (scheduleIndex === -1) return null;
+  
+  // Determine which week: Week A for even weeks, Week B for odd
+  const weekNum = getWeekNumber(now);
+  const weekKey = weekNum % 2 === 0 ? 'A' : 'B';
+  
+  return {
+    weekKey,
+    dayIndex: scheduleIndex,
+    weekData: TRAINING_DATA.weeks[weekKey],
+    dayData: TRAINING_DATA.weeks[weekKey].days[scheduleIndex]
+  };
+}
+
+function getWeekNumber(d) {
+  const date = new Date(d.getTime());
+  date.setHours(0, 0, 0, 0);
+  date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+  const week1 = new Date(date.getFullYear(), 0, 4);
+  return 1 + Math.round(((date - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+}
+
+function getCurrentWeek() {
+  return getWeekNumber(new Date());
+}
+
+// ============================================================
+// FitTracker — App Logic (v2.0 with Calendar + Nutrition)
+// ============================================================
+
+// ---------- State ----------
+const STATE = {
+  currentTab: 'plans',
+  currentWeek: 'A',
+  viewingDay: null,
+  activeWorkout: null,
+  workoutTimer: null,
+  workoutSeconds: 0,
+  restTimer: null,
+  restSeconds: 0,
+  isResting: false,
+  currentExIndex: 0,
+  currentSetIndex: 0,
+  calMonthOffset: 0,
+};
+
+let DB = loadDB();
+
+// ---------- Database ----------
+const DB_KEY = 'fittracker_v2';
+function defaultDB() {
+  return {
+    settings: {
+      trainingDays: [1, 3, 5, 7],
+      reminderTime: '17:00',
+      reminderBefore: 15,
+    },
+    workouts: [],
+    meals: [],
+    nextId: 1,
+  };
+}
+function loadDB() {
+  try {
+    const raw = localStorage.getItem(DB_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return defaultDB();
+}
+function saveDB() {
+  localStorage.setItem(DB_KEY, JSON.stringify(DB));
+}
+
+// ---------- Routing ----------
+function navigate(tab) {
+  STATE.currentTab = tab;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${tab}`).classList.add('active');
+  const navItem = document.querySelector(`.nav-item[data-tab="${tab}"]`);
+  if (navItem) navItem.classList.add('active');
+  renderCurrentPage();
+}
+
+function renderCurrentPage() {
+  switch (STATE.currentTab) {
+    case 'plans': renderCalendar(); break;
+    case 'history': renderHistory(); break;
+    case 'nutrition': renderNutrition(); break;
+    case 'settings': renderSettings(); break;
+  }
+}
+
+// ============================================================
+// CALENDAR VIEW (replaces the old plans list)
+// ============================================================
+
+function renderCalendar() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + STATE.calMonthOffset;
+  
+  // Handle year rollover
+  let calYear = year;
+  let calMonth = month;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  
+  const weekNum = getCurrentWeek();
+  const weekKey = weekNum % 2 === 0 ? 'A' : 'B';
+  const weekLabel = TRAINING_DATA.weeks[weekKey].label;
+  
+  document.getElementById('week-label').textContent = `第 ${weekNum} 周 · ${weekLabel}`;
+  
+  const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const dayNames = ['日','一','二','三','四','五','六'];
+  
+  // Get first day and days in month
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  
+  // Get completed workout dates
+  const completedDates = new Set();
+  const completedScores = {};
+  DB.workouts.forEach(w => {
+    completedDates.add(w.date);
+    completedScores[w.date] = w.score?.overall;
+  });
+  
+  // Build calendar HTML
+  let html = `
+    <div class="cal-nav">
+      <button onclick="changeMonth(-1)">← ${monthNames[calMonth-1 < 0 ? 11 : calMonth-1]}</button>
+      <span class="month-title">${calYear}年 ${monthNames[calMonth]}</span>
+      <button onclick="changeMonth(1)">${monthNames[calMonth+1 > 11 ? 0 : calMonth+1]} →</button>
+    </div>
+    <div class="cal-grid">
+  `;
+  
+  // Day headers
+  dayNames.forEach(d => {
+    html += `<div class="cal-header">${d}</div>`;
+  });
+  
+  // Empty cells before first day
+  for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+    html += `<div class="cal-day other-month"></div>`;
+  }
+  
+  // Day cells
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayOfWeek = new Date(calYear, calMonth, d).getDay() || 7;
+    const isTrainingDay = TRAINING_DATA.schedule.includes(dayOfWeek);
+    const isCompleted = completedDates.has(dateStr);
+    const isToday = new Date().toISOString().split('T')[0] === dateStr;
+    const score = completedScores[dateStr];
+    
+    // Calculate which day of the training schedule and week pattern
+    const scheduleIdx = TRAINING_DATA.schedule.indexOf(dayOfWeek);
+    const weekOfDate = getWeekNumber(new Date(calYear, calMonth, d));
+    const dateWeekKey = weekOfDate % 2 === 0 ? 'A' : 'B';
+    
+    let classes = 'cal-day';
+    if (!isTrainingDay) classes += ' other-month';
+    if (isTrainingDay) classes += ' training';
+    if (isCompleted) classes += ' completed';
+    if (isToday) classes += ' today';
+    
+    let label = '';
+    let check = '';
+    if (isTrainingDay && scheduleIdx >= 0) {
+      const dayData = TRAINING_DATA.weeks[dateWeekKey]?.days[scheduleIdx];
+      if (dayData) label = dayData.name;
+    }
+    if (isCompleted) check = '✓';
+    
+    html += `
+      <div class="${classes}" onclick="${isTrainingDay && scheduleIdx >= 0 && !isCompleted ? `viewDayFromCal('${dateWeekKey}',${scheduleIdx})` : (isCompleted ? `viewCompletedWorkout('${dateStr}')` : '')}">
+        <div class="cal-date">${d}</div>
+        ${label ? `<div class="cal-label">${label}</div>` : ''}
+        ${check ? `<div class="cal-check">${check}</div>` : ''}
+        ${score ? `<div class="cal-score">${score}</div>` : ''}
+      </div>
+    `;
+  }
+  
+  html += `</div>`;
+  
+  // Today's workout quick start section
+  const todayWorkout = getTodayWorkout();
+  if (todayWorkout) {
+    const day = todayWorkout.dayData;
+    const exists = DB.workouts.some(w => w.date === new Date().toISOString().split('T')[0] && w.dayName === day.name);
+    if (!exists) {
+      html += `
+        <div class="day-card today" onclick="viewDay('${todayWorkout.weekKey}', ${todayWorkout.dayIndex})">
+          <div class="day-header">
+            <div class="day-name">📌 今日训练 · ${day.name}</div>
+            <div class="day-tag">${todayWorkout.weekKey === 'A' ? 'Week A' : 'Week B'}</div>
+          </div>
+          <div class="part-summary">${getDaySummary(day)}</div>
+        </div>
+      `;
+    } else {
+      html += `
+        <div class="day-card completed" style="opacity:0.6;">
+          <div class="day-header">
+            <div class="day-name">✅ 今日训练已完成</div>
+          </div>
+        </div>
+      `;
+    }
+  }
+  
+  document.getElementById('plans-list').innerHTML = html;
+}
+
+function changeMonth(delta) {
+  STATE.calMonthOffset += delta;
+  renderCalendar();
+}
+
+function viewDayFromCal(weekKey, dayIdx) {
+  viewDay(weekKey, dayIdx);
+}
+
+function viewCompletedWorkout(dateStr) {
+  const w = DB.workouts.filter(w => w.date === dateStr);
+  if (!w.length) return;
+  const workout = w[w.length - 1]; // most recent
+  showToast(`✅ ${workout.dayName} · ${workout.score ? workout.score.overall + '/10' : '未评分'}`);
+  // Show quick detail
+  showCompletedDetail(workout);
+}
+
+function showCompletedDetail(workout) {
+  const doneSets = workout.exercises.reduce((s, ex) => s + ex.sets.filter(st => st.done).length, 0);
+  const totalSets = workout.exercises.reduce((s, ex) => s + ex.sets.length, 0);
+  const details = workout.exercises
+    .filter(ex => ex.sets.some(s => s.done))
+    .map(ex => {
+      const sets = ex.sets.filter(s => s.done).map(s => s.weight ? `${s.weight}kg×${s.reps}` : `${s.reps}次`).join(', ');
+      return `${ex.name}: ${sets}`;
+    }).join('\n');
+  
+  const overlay = document.getElementById('scoring-modal');
+  overlay.classList.add('show');
+  overlay.innerHTML = `
+    <div class="modal">
+      <h2>📋 ${workout.dayName}</h2>
+      <div class="stat-row"><label>日期</label><span class="value">${formatDate(workout.date)}</span></div>
+      <div class="stat-row"><label>用时</label><span class="value">${workout.duration ? formatTime(workout.duration) : '—'}</span></div>
+      <div class="stat-row"><label>完成</label><span class="value">${doneSets}/${totalSets} 组</span></div>
+      ${workout.score ? `
+        <div class="stat-row"><label>综合评分</label><span class="value">${workout.score.overall}/10</span></div>
+        <div style="font-size:0.78rem;color:var(--text3);padding:8px 0;border-top:1px solid var(--border)">
+          努力: ${workout.score.effort}/10 · 状态: ${workout.score.energy}/10 · 泵感: ${workout.score.pump}/10
+          ${workout.score.notes ? '<br>📝 ' + workout.score.notes : ''}
+        </div>
+      ` : '<div style="color:var(--text3)">未评分</div>'}
+      <div style="margin-top:10px;text-align:center;">
+        <button onclick="closeScoringModal()" style="padding:10px 30px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;color:var(--text);font-size:0.85rem;cursor:pointer;">关闭</button>
+      </div>
+    </div>
+  `;
+}
+
+function getDaySummary(day) {
+  return day.parts.map(part => {
+    const names = part.exercises.map(e => e.name).join('、');
+    return `<strong>${part.name.replace('🏆 ','').replace('🔧 ','')}:</strong> ${names}`;
+  }).join('<br>');
+}
+
+// ---------- Viewing a specific day ----------
+function viewDay(weekKey, dayIdx) {
+  STATE.currentWeek = weekKey;
+  STATE.viewingDay = dayIdx;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-workout-detail').classList.add('active');
+  renderDayDetail(weekKey, dayIdx);
+}
+
+function backToPlans() {
+  STATE.viewingDay = null;
+  STATE.calMonthOffset = 0; // reset to current month
+  navigate('plans');
+}
+
+function renderDayDetail(weekKey, dayIdx) {
+  const weekData = TRAINING_DATA.weeks[weekKey];
+  const day = weekData.days[dayIdx];
+  const scheduleDay = TRAINING_DATA.schedule[dayIdx];
+  const dayName = TRAINING_DATA.dayNames[scheduleDay - 1];
+  
+  const container = document.getElementById('detail-content');
+  let html = `
+    <button class="back-btn" onclick="backToPlans()">← 返回日历</button>
+    <div class="detail-header">
+      <h2>${dayName} · ${day.name}</h2>
+      <div class="meta">${weekData.label} · 共计 ${countExercises(day)} 个动作 · 60分钟</div>
+    </div>
+    <button class="start-workout-btn" onclick="startWorkout('${weekKey}', ${dayIdx})">
+      🏋️ 开始训练
+    </button>
+  `;
+  
+  day.parts.forEach(part => {
+    html += `<div class="part-section"><div class="part-title">${part.name}</div>`;
+    part.exercises.forEach((ex, ei) => {
+      html += renderExerciseCard(ex, ei);
+    });
+    html += `</div>`;
+  });
+  
+  container.innerHTML = html;
+}
+
+function renderExerciseCard(ex, idx) {
+  const totalRest = ex.rest || 60;
+  return `
+    <div class="exercise-card">
+      <div class="ex-header">
+        <div>
+          <div class="ex-name">${idx + 1}. ${ex.name}</div>
+          ${ex.altName ? `<div class="ex-alt">${ex.altName}</div>` : ''}
+        </div>
+      </div>
+      <div class="ex-meta">
+        <span>${ex.sets}组</span>
+        <span>${ex.reps}次</span>
+        <span>休息 ${totalRest}s</span>
+      </div>
+      ${ex.tips ? `<div class="ex-tips">💡 ${ex.tips}</div>` : ''}
+      ${ex.video ? `<button class="ex-video-btn" onclick="playVideo('${ex.video}')">▶ 看视频教程</button>` : ''}
+      <div class="set-inputs" id="set-inputs-${idx}">
+        ${Array.from({length: ex.sets}, (_, s) => `
+          <div style="display:flex;align-items:center;gap:3px;">
+            <span class="set-label">${s+1}</span>
+            <input type="number" placeholder="kg" class="weight-input" data-ex="${idx}" data-set="${s}" min="0" step="2.5">
+            <span class="set-label">×</span>
+            <input type="number" placeholder="次" class="reps-input" data-ex="${idx}" data-set="${s}" min="0">
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function countExercises(day) {
+  return day.parts.reduce((sum, p) => sum + p.exercises.length, 0);
+}
+
+// ============================================================
+// WORKOUT MODE
+// ============================================================
+
+function startWorkout(weekKey, dayIdx) {
+  const weekData = TRAINING_DATA.weeks[weekKey];
+  const day = weekData.days[dayIdx];
+  const today = new Date();
+  
+  STATE.activeWorkout = {
+    id: DB.nextId++,
+    weekKey,
+    dayIdx,
+    dayName: day.name,
+    date: today.toISOString().split('T')[0],
+    timestamp: today.toISOString(),
+    startTime: Date.now(),
+    exercises: [],
+    completed: false,
+  };
+  
+  day.parts.forEach(part => {
+    part.exercises.forEach(ex => {
+      STATE.activeWorkout.exercises.push({
+        name: ex.name,
+        sets: Array.from({length: ex.sets}, () => ({
+          weight: 0,
+          reps: 0,
+          done: false,
+        })),
+        done: false,
+        rest: ex.rest || 60,
+      });
+    });
+  });
+  
+  STATE.currentExIndex = 0;
+  STATE.currentSetIndex = 0;
+  STATE.workoutSeconds = 0;
+  STATE.isResting = false;
+  
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-workout').classList.add('active');
+  document.querySelector('.workout-active-indicator').classList.add('show');
+  
+  startWorkoutTimer();
+  renderWorkout();
+}
+
+function startWorkoutTimer() {
+  if (STATE.workoutTimer) clearInterval(STATE.workoutTimer);
+  STATE.workoutTimer = setInterval(() => {
+    STATE.workoutSeconds++;
+    if (!STATE.isResting) updateWorkoutTimer();
+  }, 1000);
+}
+
+function updateWorkoutTimer() {
+  const el = document.getElementById('workout-total-time');
+  if (el) el.textContent = formatTime(STATE.workoutSeconds);
+}
+
+function renderWorkout() {
+  const workout = STATE.activeWorkout;
+  const ex = workout.exercises[STATE.currentExIndex];
+  const dayData = TRAINING_DATA.weeks[workout.weekKey].days[workout.dayIdx];
+  
+  let videoId = '', videoTitle = '', tips = '';
+  let flatIdx = 0;
+  for (const part of dayData.parts) {
+    for (const dex of part.exercises) {
+      if (flatIdx === STATE.currentExIndex) {
+        videoId = dex.video || '';
+        videoTitle = dex.videoTitle || dex.name;
+        tips = dex.tips || '';
+      }
+      flatIdx++;
+    }
+  }
+  
+  const total = workout.exercises.length;
+  const doneCount = workout.exercises.filter(e => e.done).length;
+  const pct = Math.round((doneCount / total) * 100);
+  
+  const html = `
+    <div class="mb-16" style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:0.85rem;font-weight:700;">🏋️ ${workout.dayName}</div>
+        <div class="text-muted" style="font-size:0.72rem;">${doneCount}/${total} 个动作完成</div>
+      </div>
+      <div id="workout-total-time" style="font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent);">
+        ${formatTime(STATE.workoutSeconds)}
+      </div>
+    </div>
+    <div class="progress-bar"><div class="fill" style="width:${pct}%"></div></div>
+    
+    <div class="timer-section" id="rest-timer-area" ${STATE.isResting ? '' : 'style="display:none"'}>
+      ${STATE.isResting ? `
+        <div class="timer-display rest-mode" id="rest-timer-display">${formatTime(STATE.restSeconds)}</div>
+        <div class="timer-label">休息中 · 建议 ${ex.rest}s</div>
+        <div class="timer-controls"><button onclick="skipRest()">跳过 ⏭</button></div>
+      ` : ''}
+    </div>
+    
+    <div class="exercise-card active-ex" style="margin-bottom:16px;">
+      <div class="ex-header">
+        <div class="ex-name">
+          <span style="color:var(--accent);">#${STATE.currentExIndex+1}</span> ${ex.name}
+        </div>
+      </div>
+      ${tips ? `<div class="ex-tips">💡 ${tips}</div>` : ''}
+      ${videoId ? `<button class="ex-video-btn mb-8" onclick="playVideo('${videoId}')">▶ ${videoTitle}</button>` : ''}
+    </div>
+    
+    <div class="part-section">
+      <div class="part-title">组数记录</div>
+      ${ex.sets.map((set, si) => `
+        <div class="exercise-card" style="padding:10px;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span style="font-weight:600;min-width:30px;">第${si+1}组</span>
+            <input class="weight-input" type="number" min="0" step="2.5" placeholder="kg"
+              value="${set.weight || ''}" style="width:65px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--text);font-size:0.85rem;text-align:center;"
+              onchange="updateSet(${si}, 'weight', this.value)">
+            <span class="text-muted">×</span>
+            <input class="reps-input" type="number" min="0" placeholder="次"
+              value="${set.reps || ''}" style="width:55px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--text);font-size:0.85rem;text-align:center;"
+              onchange="updateSet(${si}, 'reps', this.value)">
+            <button class="set-done ${set.done ? 'done' : ''}" onclick="toggleSet(${si})">
+              ${set.done ? '✓' : ''}
+            </button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    
+    <div style="display:flex;gap:10px;">
+      ${STATE.currentExIndex > 0 ? `<button onclick="prevExercise()" style="flex:1;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-weight:600;cursor:pointer;">← 上一个</button>` : ''}
+      <button onclick="nextExercise()" style="flex:1;padding:12px;background:${ex.sets.some(s => s.done) ? 'var(--accent)' : 'var(--bg3)'};border:none;border-radius:var(--radius-sm);color:#fff;font-weight:700;cursor:pointer;font-size:0.9rem;">
+        ${STATE.currentExIndex < total - 1 ? '✓ 完成并继续 →' : '🏁 完成训练'}
+      </button>
+    </div>
+  `;
+  
+  document.getElementById('workout-content').innerHTML = html;
+}
+
+function updateSet(si, field, value) {
+  const ex = STATE.activeWorkout.exercises[STATE.currentExIndex];
+  ex.sets[si][field] = parseFloat(value) || 0;
+}
+
+function toggleSet(si) {
+  const ex = STATE.activeWorkout.exercises[STATE.currentExIndex];
+  ex.sets[si].done = !ex.sets[si].done;
+  ex.done = ex.sets.every(s => s.done);
+  renderWorkout();
+}
+
+function nextExercise() {
+  const workout = STATE.activeWorkout;
+  const ex = workout.exercises[STATE.currentExIndex];
+  const total = workout.exercises.length;
+  
+  if (ex.sets.some(s => s.done)) ex.done = true;
+  
+  if (STATE.currentExIndex < total - 1) {
+    STATE.currentExIndex++;
+    STATE.currentSetIndex = 0;
+    const nextEx = workout.exercises[STATE.currentExIndex];
+    if (ex.rest && ex.rest > 0) { startRestTimer(ex.rest); renderWorkout(); }
+    else renderWorkout();
+  } else {
+    completeWorkout();
+  }
+}
+
+function prevExercise() {
+  if (STATE.currentExIndex > 0) {
+    STATE.currentExIndex--;
+    STATE.currentSetIndex = 0;
+    STATE.isResting = false;
+    if (STATE.restTimer) clearInterval(STATE.restTimer);
+    renderWorkout();
+  }
+}
+
+function startRestTimer(seconds) {
+  STATE.isResting = true;
+  STATE.restSeconds = seconds;
+  if (STATE.restTimer) clearInterval(STATE.restTimer);
+  
+  const area = document.getElementById('rest-timer-area');
+  if (area) area.style.display = 'block';
+  
+  STATE.restTimer = setInterval(() => {
+    STATE.restSeconds--;
+    const d = document.getElementById('rest-timer-display');
+    if (d) d.textContent = formatTime(Math.max(0, STATE.restSeconds));
+    
+    if (STATE.restSeconds <= 0) {
+      clearInterval(STATE.restTimer);
+      STATE.restTimer = null;
+      STATE.isResting = false;
+      if (navigator.vibrate) navigator.vibrate(200);
+      renderWorkout();
+    }
+  }, 1000);
+}
+
+function skipRest() {
+  if (STATE.restTimer) clearInterval(STATE.restTimer);
+  STATE.restTimer = null;
+  STATE.isResting = false;
+  renderWorkout();
+}
+
+// ============================================================
+// SCORING + POST-WORKOUT NUTRITION
+// ============================================================
+
+function completeWorkout() {
+  if (STATE.workoutTimer) clearInterval(STATE.workoutTimer);
+  STATE.workoutTimer = null;
+  STATE.isResting = false;
+  if (STATE.restTimer) clearInterval(STATE.restTimer);
+  
+  STATE.activeWorkout.completed = true;
+  STATE.activeWorkout.endTime = Date.now();
+  STATE.activeWorkout.duration = STATE.workoutSeconds;
+  
+  showScoringModal();
+}
+
+function showScoringModal() {
+  const workout = STATE.activeWorkout;
+  const totalTime = STATE.workoutSeconds;
+  const totalSets = workout.exercises.reduce((s, ex) => s + ex.sets.length, 0);
+  const doneSets = workout.exercises.reduce((s, ex) => s + ex.sets.filter(st => st.done).length, 0);
+  const doneExercises = workout.exercises.filter(e => e.sets.some(s => s.done)).length;
+  const totalExercises = workout.exercises.length;
+  
+  const overlay = document.getElementById('scoring-modal');
+  overlay.classList.add('show');
+  
+  overlay.innerHTML = `
+    <div class="modal">
+      <h2>🏁 训练完成！</h2>
+      
+      <div class="stat-row"><label>用时</label><span class="value">${formatTime(totalTime)}</span></div>
+      <div class="stat-row"><label>完成组数</label><span class="value">${doneSets}/${totalSets}</span></div>
+      <div class="stat-row"><label>完成动作</label><span class="value">${doneExercises}/${totalExercises}</span></div>
+      
+      <div style="margin:16px 0;border-top:1px solid var(--border);padding-top:16px;">
+        <div style="font-size:0.9rem;font-weight:600;margin-bottom:12px;text-align:center;">自我评分</div>
+        
+        <div class="rating-slider">
+          <div class="slider-value" id="score-effort-val">7</div>
+          <input type="range" id="score-effort" min="1" max="10" value="7" oninput="updateSliderVal('score-effort', 'score-effort-val')">
+          <div class="slider-label"><span>轻松</span><span>💪 努力程度</span><span>拼尽全力</span></div>
+        </div>
+        
+        <div class="rating-slider">
+          <div class="slider-value" id="score-energy-val">7</div>
+          <input type="range" id="score-energy" min="1" max="10" value="7" oninput="updateSliderVal('score-energy', 'score-energy-val')">
+          <div class="slider-label"><span>状态差</span><span>⚡ 身体状态</span><span>状态爆棚</span></div>
+        </div>
+        
+        <div class="rating-slider">
+          <div class="slider-value" id="score-pump-val">7</div>
+          <input type="range" id="score-pump" min="1" max="10" value="7" oninput="updateSliderVal('score-pump', 'score-pump-val')">
+          <div class="slider-label"><span>没感觉</span><span>🔥 泵感/发力感</span><span>爆炸泵感</span></div>
+        </div>
+        
+        <textarea class="rating-textarea" id="score-notes" placeholder="训练备注（哪里做得好？下次注意什么？）"></textarea>
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn-cancel" onclick="closeScoringModal()">以后再评</button>
+        <button class="btn-save" onclick="saveScore()">✓ 保存评分</button>
+      </div>
+    </div>
+  `;
+  
+  setTimeout(() => document.getElementById('score-effort')?.focus(), 300);
+}
+
+function updateSliderVal(inputId, valId) {
+  document.getElementById(valId).textContent = document.getElementById(inputId).value;
+}
+
+function closeScoringModal() {
+  document.getElementById('scoring-modal').classList.remove('show');
+  if (STATE.activeWorkout) finishWorkoutSession();
+}
+
+function saveScore() {
+  const effort = parseInt(document.getElementById('score-effort').value);
+  const energy = parseInt(document.getElementById('score-energy').value);
+  const pump = parseInt(document.getElementById('score-pump').value);
+  const notes = document.getElementById('score-notes').value;
+  
+  const workout = STATE.activeWorkout;
+  const doneSets = workout.exercises.reduce((s, ex) => s + ex.sets.filter(st => st.done).length, 0);
+  const totalSets = workout.exercises.reduce((s, ex) => s + ex.sets.length, 0);
+  const completionRate = doneSets / Math.max(totalSets, 1);
+  
+  const score = Math.round(
+    (effort * 0.4 + energy * 0.3 + pump * 0.15 + (completionRate * 10) * 0.15) * 10
+  ) / 10;
+  
+  workout.score = {
+    effort, energy, pump,
+    completion: Math.round(completionRate * 100),
+    overall: score, notes,
+  };
+  
+  DB.workouts.push(JSON.parse(JSON.stringify(workout)));
+  saveDB();
+  
+  document.getElementById('scoring-modal').classList.remove('show');
+  
+  // Show post-workout nutrition
+  showPostWorkoutNutrition(score);
+}
+
+function showPostWorkoutNutrition(score) {
+  document.querySelector('.workout-active-indicator').classList.remove('show');
+  const overlay = document.getElementById('scoring-modal');
+  const nutri = NUTRITION.postWorkout;
+  
+  overlay.classList.add('show');
+  overlay.innerHTML = `
+    <div class="modal">
+      <h2>✅ 评分已保存！</h2>
+      <div style="text-align:center;font-size:2rem;font-weight:700;color:var(--accent);margin-bottom:8px;">
+        ${score}/10
+      </div>
+      
+      <div class="post-nutri">
+        <div class="pn-title">🥗 训练后30分钟内 · 建议摄入</div>
+        <div class="pn-macros">
+          <div class="pn-macro protein">
+            <div class="val">${nutri.target.protein}g</div>
+            <div class="lab">蛋白质</div>
+          </div>
+          <div class="pn-macro carbs">
+            <div class="val">${nutri.target.carbs}g</div>
+            <div class="lab">碳水</div>
+          </div>
+          <div class="pn-macro fat">
+            <div class="val">${nutri.target.fat}g</div>
+            <div class="lab">脂肪</div>
+          </div>
+        </div>
+        
+        <div style="font-size:0.75rem;color:var(--text3);text-align:center;margin-top:6px;">
+          ${nutri.rationale}
+        </div>
+        
+        <div class="pn-meals">
+          <div style="font-size:0.8rem;font-weight:600;margin-bottom:6px;">推荐搭配：</div>
+          ${nutri.meals.map(m => `
+            <div class="pn-meal">
+              <strong>${m.name}</strong><br>
+              <span style="color:var(--text2)">${m.ingredients}</span>
+              <span style="color:var(--text3);font-size:0.72rem;display:block;">
+                P${m.protein}g / C${m.carbs}g / F${m.fat}g
+              </span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      
+      <div style="margin-top:12px;text-align:center;">
+        <button onclick="closeScoringModal()" style="padding:10px 30px;background:var(--accent2);border:none;border-radius:20px;color:#fff;font-size:0.9rem;font-weight:600;cursor:pointer;">
+          👍 知道了，去吃
+        </button>
+      </div>
+    </div>
+  `;
+  
+  STATE.activeWorkout = null;
+}
+
+function finishWorkoutSession() {
+  document.querySelector('.workout-active-indicator').classList.remove('show');
+  STATE.activeWorkout = null;
+  navigate('plans');
+}
+
+// ============================================================
+// HISTORY
+// ============================================================
+
+function renderHistory() {
+  const container = document.getElementById('history-list');
+  
+  if (!DB.workouts.length) {
+    container.innerHTML = `<div class="empty-state"><div style="font-size:3rem;">📊</div><p>还没有训练记录，开始你的第一次训练吧！</p></div>`;
+    return;
+  }
+  
+  const sorted = [...DB.workouts].reverse();
+  
+  container.innerHTML = sorted.map(w => {
+    const totalSets = w.exercises.reduce((s, ex) => s + ex.sets.length, 0);
+    const doneSets = w.exercises.reduce((s, ex) => s + ex.sets.filter(st => st.done).length, 0);
+    const score = w.score ? `<div class="hi-score"><div class="num">${w.score.overall}</div><div class="label">/10</div></div>` : '<div class="hi-score"><div class="num">—</div><div class="label">未评分</div></div>';
+    const notes = w.score?.notes ? `<div style="color:var(--text3);font-size:0.75rem;margin-top:4px;">📝 ${w.score.notes}</div>` : '';
+    
+    return `
+      <div class="history-item" onclick="toggleHistoryDetail(this)">
+        <div class="hi-header">
+          <div>
+            <span class="hi-date">${formatDate(w.date)}</span>
+            <span class="hi-week">${w.weekKey === 'A' ? 'Week A' : 'Week B'}</span>
+          </div>
+          ${score}
+        </div>
+        <div class="hi-name">${w.dayName}</div>
+        <div style="font-size:0.75rem;color:var(--text3);">${doneSets}/${totalSets} 组 · ${w.duration ? formatTime(w.duration) : ''}</div>
+        ${notes}
+        <div class="hi-detail">
+          <table>
+            ${w.exercises.filter(ex => ex.sets.some(s => s.done)).map(ex => `
+              <tr><td>${ex.name}</td><td>${ex.sets.filter(s => s.done).map(s => s.weight ? s.weight + 'kg×' + (s.reps || '?') : (s.reps || '✓')).join(', ')}</td></tr>
+            `).join('')}
+          </table>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleHistoryDetail(el) {
+  el.classList.toggle('expanded');
+}
+
+// ============================================================
+// MEAL LOGGER STATE
+// ============================================================
+
+let MEAL_STATE = {
+  nutriTab: 'log', // 'log' | 'targets' | 'guide'
+  customFoodName: '',
+  customGrams: 150,
+  mealType: 'breakfast'
+};
+
+function getTodayMeals() {
+  const today = new Date().toISOString().split('T')[0];
+  const dayMeals = DB.meals.filter(m => m.date === today);
+  if (dayMeals.length === 0) return [];
+  return dayMeals[0].items;
+}
+
+function saveTodayMeals(items) {
+  const today = new Date().toISOString().split('T')[0];
+  const idx = DB.meals.findIndex(m => m.date === today);
+  if (idx >= 0) {
+    DB.meals[idx].items = items;
+  } else {
+    DB.meals.push({ date: today, items: items });
+  }
+  saveDB();
+}
+
+function addMeal(foodName, grams) {
+  const food = FOOD_DATABASE[foodName];
+  if (!food) return;
+  const ratio = grams / 100;
+  const item = {
+    name: foodName,
+    grams: grams,
+    kcal: Math.round(food.kcal * ratio),
+    protein: Math.round(food.protein * ratio * 10) / 10,
+    carbs: Math.round(food.carbs * ratio * 10) / 10,
+    fat: Math.round(food.fat * ratio * 10) / 10,
+    group: food.group
+  };
+  const items = getTodayMeals();
+  items.push(item);
+  saveTodayMeals(items);
+  renderNutrition();
+}
+
+function deleteMeal(idx) {
+  const items = getTodayMeals();
+  items.splice(idx, 1);
+  saveTodayMeals(items);
+  renderNutrition();
+}
+
+function getMealTotals() {
+  const items = getTodayMeals();
+  const totals = { kcal: 0, protein: 0, carbs: 0, fat: 0 };
+  items.forEach(item => {
+    totals.kcal += item.kcal;
+    totals.protein += item.protein;
+    totals.carbs += item.carbs;
+    totals.fat += item.fat;
+  });
+  totals.kcal = Math.round(totals.kcal);
+  totals.protein = Math.round(totals.protein * 10) / 10;
+  totals.carbs = Math.round(totals.carbs * 10) / 10;
+  totals.fat = Math.round(totals.fat * 10) / 10;
+  return totals;
+}
+
+function isTodayTrainingDay() {
+  const day = new Date().getDay() || 7;
+  return TRAINING_DATA.schedule.includes(day);
+}
+
+// ============================================================
+// NUTRITION ANALYSIS
+// ============================================================
+
+function analyzeMeals() {
+  const totals = getMealTotals();
+  const isTraining = isTodayTrainingDay();
+  const targets = isTraining ? NUTRITION.dailyTargets.training : NUTRITION.dailyTargets.rest;
+  
+  const pct = {
+    kcal: Math.round((totals.kcal / targets.kcal) * 100),
+    protein: Math.round((totals.protein / targets.protein) * 100),
+    carbs: Math.round((totals.carbs / targets.carbs) * 100),
+    fat: Math.round((totals.fat / targets.fat) * 100)
+  };
+  
+  // Determine deficits
+  const deficits = [];
+  if (totals.protein < targets.protein * 0.8) deficits.push('protein');
+  if (totals.carbs < targets.carbs * 0.8) deficits.push('carbs');
+  if (totals.fat < targets.fat * 0.8) deficits.push('fat');
+  
+  // Check veggies - count veggie items
+  const veggieItems = getTodayMeals().filter(i => i.group === 'veggie');
+  const veggieGrams = veggieItems.reduce((s, i) => s + i.grams, 0);
+  if (veggieGrams < 200) deficits.push('veggie');
+  
+  // Build recommendations
+  const recs = [];
+  if (deficits.includes('protein')) {
+    recs.push({
+      type: 'warn',
+      label: '🔴 蛋白质不够！',
+      text: '建议加餐：鸡胸肉 150g (49g蛋白) / 鸡蛋 3个 (39g蛋白) / 希腊酸奶 300g (27g蛋白) / 蛋白粉 1勺 (24g蛋白)'
+    });
+  }
+  if (deficits.includes('carbs')) {
+    recs.push({
+      type: 'warn',
+      label: '🟡 碳水不足',
+      text: '建议加餐：白米饭 200g (52g碳水) / 燕麦 50g (33g碳水) / 红薯 200g (40g碳水) / 香蕉 2根 (46g碳水)'
+    });
+  }
+  if (deficits.includes('fat')) {
+    recs.push({
+      type: 'warn',
+      label: '🟡 脂肪偏低',
+      text: '建议加餐：橄榄油 10g (10g脂肪) / 坚果混合 30g (16g脂肪) / 花生酱 20g (10g脂肪)'
+    });
+  }
+  if (deficits.includes('veggie')) {
+    recs.push({
+      type: 'warn',
+      label: '🟢 蔬菜不够！',
+      text: '建议加餐：西兰花 200g / 菠菜沙拉 150g / 黄瓜西红柿沙拉 — 补充维生素和纤维'
+    });
+  }
+  
+  // Check calories
+  if (totals.kcal < targets.kcal * 0.7) {
+    recs.push({
+      type: 'warn',
+      label: '⚡ 总热量偏低',
+      text: '整体吃得太少，会影响训练恢复和新陈代谢。' + (isTraining ? '训练日建议至少吃到' + targets.kcal + 'kcal' : '休息日也要保持' + targets.kcal + 'kcal左右')
+    });
+  }
+  
+  if (recs.length === 0) {
+    recs.push({
+      type: 'good',
+      label: '✅ 今日营养均衡！',
+      text: '各项宏量营养素都达标了，继续保持！'
+    });
+  }
+  
+  // Show analysis modal
+  const overlay = document.getElementById('scoring-modal');
+  overlay.classList.add('show');
+  overlay.innerHTML = `
+    <div class="modal" style="max-width:420px;">
+      <h2>📊 饮食分析</h2>
+      <div class="stat-row"><label>总热量</label><span class="value">${totals.kcal} / ${targets.kcal} kcal <span style="font-size:0.7rem;color:var(--text3);">(${pct.kcal}%)</span></span></div>
+      <div class="stat-row"><label>蛋白质</label><span class="value">${totals.protein} / ${targets.protein}g</span></div>
+      <div class="stat-row"><label>碳水</label><span class="value">${totals.carbs} / ${targets.carbs}g</span></div>
+      <div class="stat-row"><label>脂肪</label><span class="value">${totals.fat} / ${targets.fat}g</span></div>
+      
+      <div style="margin:12px 0;">
+        ${['protein','carbs','fat'].map(m => {
+          const p = Math.min(pct[m], 100);
+          const color = m === 'protein' ? 'var(--accent)' : m === 'carbs' ? 'var(--accent3)' : 'var(--warn)';
+          const labels = { protein: '蛋白质', carbs: '碳水', fat: '脂肪' };
+          return `
+            <div class="meal-progress-row">
+              <div class="mp-label" style="color:${color}">${labels[m]}</div>
+              <div class="mp-bar"><div class="mp-fill" style="width:${p}%;background:${color}"></div></div>
+              <div class="mp-num">${pct[m]}%</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+      
+      <div style="border-top:1px solid var(--border);padding-top:12px;">
+        <div style="font-size:0.9rem;font-weight:600;margin-bottom:10px;">💡 建议</div>
+        <div class="analysis-recs">
+          ${recs.map(r => `
+            <div class="rec-item ${r.type}">
+              <div class="rec-label">${r.label}</div>
+              <div class="rec-text">${r.text}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      
+      ${!isTraining ? `
+        <div style="margin-top:10px;font-size:0.75rem;color:var(--text3);text-align:center;padding:8px;background:var(--bg3);border-radius:var(--radius-sm);">
+          🛌 今天是休息日，目标 = 休息日标准
+        </div>
+      ` : ''}
+      
+      <div style="margin-top:14px;text-align:center;">
+        <button onclick="closeScoringModal()" style="padding:10px 30px;background:var(--accent2);border:none;border-radius:20px;color:#fff;font-weight:600;cursor:pointer;">
+          👍 知道了
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// NUTRITION PAGE
+// ============================================================
+
+function setNutriTab(tab) {
+  MEAL_STATE.nutriTab = tab;
+  renderNutrition();
+}
+
+function renderNutrition() {
+  const container = document.getElementById('nutrition-content');
+  const nutri = NUTRITION;
+  const training = nutri.dailyTargets.training;
+  const rest = nutri.dailyTargets.rest;
+  const totals = getMealTotals();
+  
+  const isTraining = isTodayTrainingDay();
+  const targets = isTraining ? training : rest;
+  
+  const pctKcal = targets.kcal > 0 ? Math.min(Math.round((totals.kcal / targets.kcal) * 100), 100) : 0;
+  const pctProtein = targets.protein > 0 ? Math.min(Math.round((totals.protein / targets.protein) * 100), 100) : 0;
+  const pctCarbs = targets.carbs > 0 ? Math.min(Math.round((totals.carbs / targets.carbs) * 100), 100) : 0;
+  const pctFat = targets.fat > 0 ? Math.min(Math.round((totals.fat / targets.fat) * 100), 100) : 0;
+  
+  // Tab buttons
+  let html = `
+    <div class="nutri-tabs" style="padding:0 0 12px 0;">
+      <button class="${MEAL_STATE.nutriTab === 'log' ? 'active' : ''}" onclick="setNutriTab('log')">🍽️ 今日饮食</button>
+      <button class="${MEAL_STATE.nutriTab === 'targets' ? 'active' : ''}" onclick="setNutriTab('targets')">🎯 营养目标</button>
+      <button class="${MEAL_STATE.nutriTab === 'guide' ? 'active' : ''}" onclick="setNutriTab('guide')">📖 食材指南</button>
+    </div>
+  `;
+  
+  if (MEAL_STATE.nutriTab === 'log') {
+    html += renderMealLogTab(totals, targets, pctKcal, pctProtein, pctCarbs, pctFat);
+  } else if (MEAL_STATE.nutriTab === 'targets') {
+    html += renderTargetsTab(training, rest);
+  } else {
+    html += renderGuideTab(nutri);
+  }
+  
+  container.innerHTML = html;
+}
+
+function renderMealLogTab(totals, targets, pctKcal, pctProtein, pctCarbs, pctFat) {
+  const items = getTodayMeals();
+  
+  // Group items by meal type. We store mealType in item if available.
+  // Since our simple add doesn't store mealType yet, we just show all as a flat list.
+  
+  let html = `
+    <!-- Nutrition vs Targets -->
+    <div class="nutri-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <h3 style="margin:0;">🔥 今日摄入 vs 目标</h3>
+        <span style="font-size:0.75rem;color:var(--text3);">${isTodayTrainingDay() ? '训练日' : '休息日'}</span>
+      </div>
+      <div class="meal-progress-row">
+        <div class="mp-label" style="color:var(--accent);">热量</div>
+        <div class="mp-bar"><div class="mp-fill" style="width:${pctKcal}%;background:var(--accent);"></div></div>
+        <div class="mp-num">${totals.kcal}/${targets.kcal}</div>
+      </div>
+      <div class="meal-progress-row">
+        <div class="mp-label" style="color:var(--accent);">蛋白质</div>
+        <div class="mp-bar"><div class="mp-fill" style="width:${pctProtein}%;background:var(--accent);"></div></div>
+        <div class="mp-num">${totals.protein}/${targets.protein}g</div>
+      </div>
+      <div class="meal-progress-row">
+        <div class="mp-label" style="color:var(--accent3);">碳水</div>
+        <div class="mp-bar"><div class="mp-fill" style="width:${pctCarbs}%;background:var(--accent3);"></div></div>
+        <div class="mp-num">${totals.carbs}/${targets.carbs}g</div>
+      </div>
+      <div class="meal-progress-row">
+        <div class="mp-label" style="color:var(--warn);">脂肪</div>
+        <div class="mp-bar"><div class="mp-fill" style="width:${pctFat}%;background:var(--warn);"></div></div>
+        <div class="mp-num">${totals.fat}/${targets.fat}g</div>
+      </div>
+    </div>
+    
+    <!-- Quick Add Buttons -->
+    <div class="nutri-card">
+      <h3>⚡ 快捷添加</h3>
+      <div style="font-size:0.72rem;color:var(--text3);margin-bottom:6px;">蛋白质</div>
+      <div class="meal-quick-grid">
+        ${renderQuickBtn('鸡胸肉', 150, 'protein')}
+        ${renderQuickBtn('鸡蛋(熟)', 150, 'protein')}
+        ${renderQuickBtn('希腊酸奶', 200, 'protein')}
+        ${renderQuickBtn('瘦牛肉', 150, 'protein')}
+        ${renderQuickBtn('虾仁', 150, 'protein')}
+        ${renderQuickBtn('豆腐', 200, 'protein')}
+        ${renderQuickBtn('蛋白粉(乳清)', 30, 'protein')}
+        ${renderQuickBtn('白奶酪', 100, 'protein')}
+      </div>
+      <div style="font-size:0.72rem;color:var(--text3);margin-bottom:6px;">碳水</div>
+      <div class="meal-quick-grid">
+        ${renderQuickBtn('白米饭(熟)', 200, 'carbs')}
+        ${renderQuickBtn('面条(熟)', 200, 'carbs')}
+        ${renderQuickBtn('燕麦片', 50, 'carbs')}
+        ${renderQuickBtn('红薯', 200, 'carbs')}
+        ${renderQuickBtn('土豆', 200, 'carbs')}
+        ${renderQuickBtn('全麦面包', 100, 'carbs')}
+        ${renderQuickBtn('馒头', 100, 'carbs')}
+        ${renderQuickBtn('香蕉', 150, 'carbs')}
+      </div>
+      <div style="font-size:0.72rem;color:var(--text3);margin-bottom:6px;">蔬菜</div>
+      <div class="meal-quick-grid">
+        ${renderQuickBtn('西兰花', 150, 'veggie')}
+        ${renderQuickBtn('菠菜', 150, 'veggie')}
+        ${renderQuickBtn('生菜', 100, 'veggie')}
+        ${renderQuickBtn('西红柿', 150, 'veggie')}
+        ${renderQuickBtn('黄瓜', 150, 'veggie')}
+        ${renderQuickBtn('胡萝卜', 100, 'veggie')}
+        ${renderQuickBtn('蘑菇', 100, 'veggie')}
+        ${renderQuickBtn('洋葱', 50, 'veggie')}
+      </div>
+      <div style="font-size:0.72rem;color:var(--text3);margin-bottom:6px;">脂肪</div>
+      <div class="meal-quick-grid">
+        ${renderQuickBtn('橄榄油', 10, 'fat')}
+        ${renderQuickBtn('花生酱', 20, 'fat')}
+        ${renderQuickBtn('坚果混合', 30, 'fat')}
+        ${renderQuickBtn('牛奶', 200, 'fat')}
+        ${renderQuickBtn('鸡蛋', 100, 'fat')}
+      </div>
+    </div>
+    
+    <!-- Custom Add -->
+    <div class="nutri-card">
+      <h3>✏️ 自定义添加</h3>
+      <div class="meal-custom-input">
+        <select id="meal-food-select">
+          ${Object.keys(FOOD_DATABASE).map(name => `<option value="${name}">${name}${FOOD_DATABASE[name].sr ? ' (' + FOOD_DATABASE[name].sr + ')' : ''}</option>`).join('')}
+        </select>
+        <input type="number" id="meal-grams-input" value="${MEAL_STATE.customGrams}" min="10" max="1000" step="10" onchange="MEAL_STATE.customGrams=parseInt(this.value)||150">
+        <span style="font-size:0.7rem;color:var(--text3);">克</span>
+        <button onclick="addCustomMeal()">添加</button>
+      </div>
+    </div>
+    
+    <!-- Logged Meals -->
+    <div class="nutri-card">
+      <h3>📝 已记录 (${items.length})</h3>
+      ${items.length === 0 ? `<div style="text-align:center;padding:20px;color:var(--text3);font-size:0.85rem;">还没有记录今天的饮食，点击上方按钮开始记录吧！</div>` : ''}
+      ${items.map((item, i) => `
+        <div class="meal-item">
+          <div class="mi-info">
+            <div class="mi-name">${item.name}</div>
+            <div class="mi-grams">${item.grams}g</div>
+          </div>
+          <div class="mi-nutri">
+            ${item.kcal}kcal<br>
+            P${item.protein} C${item.carbs} F${item.fat}
+          </div>
+          <div class="mi-actions">
+            <button onclick="deleteMeal(${i})" title="删除">✕</button>
+          </div>
+        </div>
+      `).join('')}
+      ${items.length > 0 ? `<button class="analyze-btn" onclick="analyzeMeals()">🔍 分析今日饮食</button>` : ''}
+    </div>
+  `;
+  return html;
+}
+
+function renderQuickBtn(name, grams, group) {
+  const food = FOOD_DATABASE[name];
+  if (!food) return '';
+  const kcal = Math.round(food.kcal * grams / 100);
+  return `<button class="meal-quick-btn ${group}" onclick="addMeal('${name}', ${grams})">${name}<span class="kcal">${grams}g · ${kcal}kcal</span></button>`;
+}
+
+function addCustomMeal() {
+  const select = document.getElementById('meal-food-select');
+  const gramsInput = document.getElementById('meal-grams-input');
+  if (!select || !gramsInput) return;
+  const name = select.value;
+  const grams = parseInt(gramsInput.value) || 150;
+  addMeal(name, grams);
+}
+
+function renderTargetsTab(training, rest) {
+  const isTraining = isTodayTrainingDay();
+  return `
+    <div class="nutri-card">
+      <h3>🎯 每日营养目标</h3>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <div style="flex:1;padding:10px;background:rgba(255,107,53,0.08);border-radius:var(--radius-sm);text-align:center;${isTraining ? 'border:2px solid var(--accent);' : ''}">
+          <div style="font-size:0.72rem;font-weight:600;color:var(--accent);">训练日</div>
+          <div style="font-size:0.9rem;font-weight:700;margin-top:4px;">${training.kcal} kcal</div>
+          <div style="font-size:0.7rem;color:var(--text2);">P ${training.protein}g</div>
+          <div style="font-size:0.7rem;color:var(--text2);">C ${training.carbs}g</div>
+          <div style="font-size:0.7rem;color:var(--text2);">F ${training.fat}g</div>
+        </div>
+        <div style="flex:1;padding:10px;background:rgba(68,138,255,0.08);border-radius:var(--radius-sm);text-align:center;${!isTraining ? 'border:2px solid var(--accent3);' : ''}">
+          <div style="font-size:0.72rem;font-weight:600;color:var(--accent3);">休息日</div>
+          <div style="font-size:0.9rem;font-weight:700;margin-top:4px;">${rest.kcal} kcal</div>
+          <div style="font-size:0.7rem;color:var(--text2);">P ${rest.protein}g</div>
+          <div style="font-size:0.7rem;color:var(--text2);">C ${rest.carbs}g</div>
+          <div style="font-size:0.7rem;color:var(--text2);">F ${rest.fat}g</div>
+        </div>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text3);background:var(--bg);padding:10px;border-radius:var(--radius-sm);">
+        💡 训练日需要更多碳水来补充糖原<br>
+        💡 蛋白质无论训练/休息日均保持120g+<br>
+        💡 脂肪维持55g不变，来源以不饱和脂肪为佳
+      </div>
+    </div>
+    
+    <div class="nutri-card">
+      <h3>🥗 练后加餐（30分钟内）</h3>
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <div style="flex:1;text-align:center;padding:8px;background:var(--bg);border-radius:var(--radius-sm);">
+          <div style="font-size:1rem;font-weight:700;color:var(--accent);">${NUTRITION.postWorkout.target.protein}g</div>
+          <div style="font-size:0.65rem;color:var(--text3);">蛋白质</div>
+        </div>
+        <div style="flex:1;text-align:center;padding:8px;background:var(--bg);border-radius:var(--radius-sm);">
+          <div style="font-size:1rem;font-weight:700;color:var(--accent3);">${NUTRITION.postWorkout.target.carbs}g</div>
+          <div style="font-size:0.65rem;color:var(--text3);">碳水</div>
+        </div>
+        <div style="flex:1;text-align:center;padding:8px;background:var(--bg);border-radius:var(--radius-sm);">
+          <div style="font-size:1rem;font-weight:700;color:var(--warn);">${NUTRITION.postWorkout.target.fat}g</div>
+          <div style="font-size:0.65rem;color:var(--text3);">脂肪</div>
+        </div>
+      </div>
+      <div style="font-size:0.8rem;color:var(--text2);margin-bottom:10px;">${NUTRITION.postWorkout.rationale}</div>
+      
+      <div style="font-size:0.85rem;font-weight:600;margin-bottom:6px;">推荐搭配：</div>
+      ${NUTRITION.postWorkout.meals.map(m => `
+        <div class="food-item">
+          <div>
+            <div class="food-name">${m.name}</div>
+            <div class="food-sr">${m.ingredients}</div>
+          </div>
+          <div style="text-align:right;font-size:0.7rem;color:var(--text3);">
+            P${m.protein}g<br>C${m.carbs}g<br>F${m.fat}g
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderGuideTab(nutri) {
+  let html = `
+    <div class="nutri-card">
+      <h3>📖 食材营养指南 (每100g)</h3>
+      <div style="font-size:0.78rem;color:var(--text2);margin-bottom:8px;">
+        按类别查看食材的宏量营养素
+      </div>
+  `;
+  
+  const groups = {
+    '蛋白质': { filter: g => g === 'protein', color: 'var(--accent)' },
+    '碳水/主食': { filter: g => g === 'carbs', color: 'var(--accent3)' },
+    '蔬菜': { filter: g => g === 'veggie', color: 'var(--accent2)' },
+    '脂肪': { filter: g => g === 'fat', color: 'var(--warn)' }
+  };
+  
+  Object.entries(groups).forEach(([title, cfg]) => {
+    const foods = Object.entries(FOOD_DATABASE).filter(([, f]) => cfg.filter(f.group));
+    if (foods.length === 0) return;
+    html += `
+      <div class="food-guide-group">
+        <div class="fg-title" style="color:${cfg.color}">${title}</div>
+        ${foods.map(([name, f]) => `
+          <div class="food-guide-item">
+            <span>${name}${f.sr ? ' <span style="color:var(--text3);font-size:0.7rem">(' + f.sr + ')</span>' : ''}</span>
+            <span class="fg-nutri">${f.kcal} kcal · P${f.protein} C${f.carbs} F${f.fat}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  });
+  
+  html += `</div>`;
+  
+  // Serbian food guide
+  html += `
+    <div class="nutri-card">
+      <h3>🛒 塞尔维亚食材购买指南</h3>
+      <div style="font-size:0.78rem;color:var(--text2);margin-bottom:8px;">
+        用本地名字去超市买，不愁找不到
+      </div>
+      ${nutri.serbianFoods.map(f => `
+        <div class="food-item">
+          <div>
+            <div class="food-name">${f.name}</div>
+            <div class="food-sr">${f.sr || ''} <span class="food-where">${f.where}</span></div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  
+  return html;
+}
+
+// ============================================================
+// SETTINGS
+// ============================================================
+
+function renderSettings() {
+  const s = DB.settings;
+  
+  document.querySelectorAll('.days-toggle button').forEach(btn => {
+    const day = parseInt(btn.dataset.day);
+    btn.classList.toggle('on', s.trainingDays.includes(day));
+    btn.onclick = () => toggleDay(day);
+  });
+  
+  const timeInput = document.getElementById('reminder-time');
+  if (timeInput) timeInput.value = s.reminderTime;
+  
+  const beforeInput = document.getElementById('reminder-before');
+  if (beforeInput) beforeInput.value = s.reminderBefore;
+}
+
+function toggleDay(day) {
+  const s = DB.settings;
+  const idx = s.trainingDays.indexOf(day);
+  if (idx >= 0) {
+    if (s.trainingDays.length <= 1) return;
+    s.trainingDays.splice(idx, 1);
+  } else {
+    s.trainingDays.push(day);
+    s.trainingDays.sort((a, b) => a - b);
+  }
+  saveDB();
+  renderSettings();
+}
+
+function saveReminderSettings() {
+  const s = DB.settings;
+  s.reminderTime = document.getElementById('reminder-time').value || '17:00';
+  s.reminderBefore = parseInt(document.getElementById('reminder-before').value) || 15;
+  saveDB();
+  scheduleReminder();
+  showToast('✅ 提醒设置已保存');
+}
+
+function requestNotificationPermission() {
+  if (!('Notification' in window)) { showToast('⚠️ 当前浏览器不支持桌面通知'); return; }
+  Notification.requestPermission().then(perm => {
+    if (perm === 'granted') {
+      showToast('✅ 通知已开启！');
+      scheduleReminder();
+    } else {
+      showToast('⚠️ 通知被拒绝');
+    }
+  });
+}
+
+function testNotification() {
+  if (!('Notification' in window)) { showToast('⚠️ 不支持通知'); return; }
+  if (Notification.permission !== 'granted') {
+    Notification.requestPermission().then(perm => {
+      if (perm === 'granted') new Notification('💪 FitTracker', { body: '通知正常！', icon: 'icons/icon-192.png' });
+    });
+  } else {
+    new Notification('💪 FitTracker', { body: '通知正常！', icon: 'icons/icon-192.png' });
+  }
+}
+
+function scheduleReminder() {
+  const s = DB.settings;
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  
+  const today = new Date().getDay() || 7;
+  if (!s.trainingDays.includes(today)) return;
+  
+  const [h, m] = s.reminderTime.split(':').map(Number);
+  const now = new Date();
+  const reminderTime = new Date(now);
+  reminderTime.setHours(h, m - (s.reminderBefore || 15), 0, 0);
+  
+  const msUntilReminder = reminderTime.getTime() - now.getTime();
+  
+  if (msUntilReminder > 0 && msUntilReminder < 86400000) {
+    setTimeout(() => {
+      new Notification('🏋️ 训练时间到！', {
+        body: `今天该练了！${s.reminderBefore}分钟后开始？`,
+        icon: 'icons/icon-192.png'
+      });
+    }, msUntilReminder);
+  }
+}
+
+// ============================================================
+// UTILITY
+// ============================================================
+
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
+  const days = ['日', '一', '二', '三', '四', '五', '六'];
+  return `${month}月${day}日 周${days[d.getDay()]}`;
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(DB, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `fittracker-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✅ 数据已导出');
+}
+
+function clearData() {
+  if (!confirm('确定清除所有训练数据？此操作不可恢复！')) return;
+  localStorage.removeItem(DB_KEY);
+  DB = defaultDB();
+  saveDB();
+  showToast('✅ 数据已清除');
+  renderCurrentPage();
+}
+
+// ============================================================
+// VIDEO PLAYER
+// ============================================================
+
+function playVideo(videoId) {
+  // Try opening YouTube in new tab/window first
+  var win = window.open('https://www.youtube.com/watch?v=' + videoId, '_blank');
+  // If popup blocked, fallback to inline embed
+  if (!win || win.closed) {
+    var overlay = document.getElementById('scoring-modal');
+    overlay.classList.add('show');
+    overlay.innerHTML = '<div class="modal" style="max-width:500px;"><div style="text-align:right;"><button onclick="document.getElementById(\'scoring-modal\').classList.remove(\'show\')" style="background:none;border:none;color:var(--text);font-size:1.2rem;cursor:pointer;">×</button></div><div style="position:relative;width:100%;aspect-ratio:16/9;"><iframe src="https://www.youtube.com/embed/'+videoId+'?autoplay=1" style="width:100%;height:100%;border:none;border-radius:8px;" allow="autoplay;fullscreen" allowfullscreen></iframe></div></div>';
+  }
+}
+
+function closeVideo() {
+  const overlay = document.getElementById('video-modal');
+  overlay.classList.remove('show');
+  overlay.innerHTML = '';
+}
+
+function showToast(msg) {
+  let el = document.getElementById('toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'toast';
+    el.style.cssText = `
+      position:fixed;bottom:100px;left:50%;transform:translateX(-50%);
+      background:var(--bg2);color:var(--text);padding:12px 20px;
+      border-radius:20px;font-size:0.85rem;font-weight:600;
+      box-shadow:0 4px 20px rgba(0,0,0,0.4);
+      z-index:400;opacity:0;transition:opacity 0.3s;
+      max-width:90%;text-align:center;
+      border:1px solid var(--border);
+    `;
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.opacity = '1';
+  clearTimeout(el._hide);
+  el._hide = setTimeout(() => { el.style.opacity = '0'; }, 2500);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+
+function init() {
+  const weekNum = getCurrentWeek();
+  STATE.currentWeek = weekNum % 2 === 0 ? 'A' : 'B';
+  
+  // Tab navigation (Week A/B)
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (STATE.activeWorkout) { showToast('⚠️ 正在训练中'); return; }
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      STATE.currentWeek = btn.dataset.week;
+      renderCalendar();
+    });
+  });
+  
+  // Bottom nav
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const tab = item.dataset.tab;
+      if (STATE.activeWorkout && tab !== 'workout') {
+        showToast('⚠️ 正在训练中，结束后再切换');
+        return;
+      }
+      navigate(tab);
+    });
+  });
+  
+  // Settings events
+  document.getElementById('save-settings')?.addEventListener('click', saveReminderSettings);
+  document.getElementById('request-notif')?.addEventListener('click', requestNotificationPermission);
+  document.getElementById('test-notif')?.addEventListener('click', testNotification);
+  
+  // Initial render
+  navigate('plans');
+  
+  // Reminder check
+  scheduleReminder();
+  setInterval(() => {
+    if (document.hidden) return;
+    scheduleReminder();
+  }, 60000);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+</script>
+</body>
+</html>
